@@ -1,0 +1,212 @@
+require File.expand_path(File.dirname(__FILE__) + "/framework/framework.rb")
+require 'rubygems'
+require 'gosu'
+
+class Constants
+  attr_reader :stiff, :force, :energy_limit, :min_field, :max_field
+
+  def initialize
+    @stiff = 20.0
+    @force = -7.5
+
+    @energy_limit = 0.05
+    @max_field = 40
+    @min_field = 0.1
+    @min_angle = 40
+  end
+
+  def max_angle_cos
+    Math.cos (@min_angle * Math::PI / 360.0)
+  end
+end
+
+class GameWindow < Gosu::Window
+
+  def initialize
+    @window_x = 1200
+    @window_y = 600
+
+    @scale = 15
+    @translate = @window_y * 0.1
+
+    @fr = Framework.new(Constants.new)
+    @time = Time.now
+    @begin_time = Time.now
+
+    @status = 1
+    @last_goal = 1000000.0
+
+    @goals_arr = []
+
+    super(@window_x, @window_y, false)
+  end
+
+  def status_1_update
+    a = Time.now
+    keep_working = @fr.make_denser
+    @counting_time = Time.now - a
+    @time_step = Time.now - @time
+    @time = Time.now
+
+    unless keep_working
+      @fr.perform_triangulation
+      @goals_arr << @fr.goal
+      @goal_scale = @goals_arr.last
+      @status += 1
+    end
+  end
+
+  def status_2_update
+    a = Time.now
+    @goal = @fr.optimize
+    @goals_arr << @goal
+    @counting_time = Time.now - a
+    @time_step = Time.now - @time
+    @time = Time.now
+
+    if @goal >= @last_goal * 1.01
+      @status += 1
+    else
+      @last_goal = @goal
+      @optimization = @last_goal / @goal_scale
+    end
+  end
+
+  def update
+    case @status
+    when 1
+      status_1_update
+    when 2
+      status_2_update
+    when 3
+      exit
+    end
+  end
+
+  def draw_line_framework(p1_x, p1_y, p2_x, p2_y)
+    draw_line(@translate + p1_x * @scale, @window_y - 1.0 * (@translate + p1_y * @scale), 0xff000000, 
+              @translate + p2_x * @scale, @window_y - 1.0 * (@translate + p2_y * @scale), 0xff000000)
+  end
+
+  def draw_triangle_framework(p1_x, p1_y, p2_x, p2_y, p3_x, p3_y, color)
+    draw_triangle(@translate + p1_x * @scale, @window_y - 1.0 * (@translate + p1_y * @scale), color, 
+                  @translate + p2_x * @scale, @window_y - 1.0 * (@translate + p2_y * @scale), color,
+                  @translate + p3_x * @scale, @window_y - 1.0 * (@translate + p3_y * @scale), color,
+                  0)
+  end
+
+  def write(text, x, y)
+    @font.draw(text, x, y, 1, factor_x = 1, factor_y = 1, color = 0xff000000, mode = :default)
+  end
+
+  def status_1_draw
+    @font = Gosu::Font.new(self, "Times New Roman", 24)
+
+    write("Time together        = #{Time.now - @begin_time}", 600, 80)
+    write("Time since last tick = #{@time_step}", 600, 100)
+    write("Counting time        = #{@counting_time}", 600, 120)
+    write("Number of points     = #{@fr.points.length}", 600, 150)
+    write("Max energy           = #{@fr.max_energy}", 600, 170)
+
+    draw_quad(0, 0, 0xffffffff, 
+              @window_x, 0, 0xffffffff, 
+              @window_x, @window_y, 0xffffffff, 
+              0, @window_y, 0xffffffff, 0)
+            
+    @fr.lines.each do |line|
+      draw_line_framework(line.p1.x + line.p1.dx, line.p1.y + line.p1.dy,
+                          line.p2.x + line.p2.dx, line.p2.y + line.p2.dy)
+    end
+
+    trans = 20
+
+    @fr.lines.each do |line|
+      draw_line_framework(line.p1.x + line.p1.dx + trans, line.p1.y + line.p1.dy,
+                          line.p2.x + line.p2.dx + trans, line.p2.y + line.p2.dy)
+    end
+
+    @fr.polygons.each do |poly|
+      if @fr.max_energy > 1
+        color = Gosu::Color.argb(255, 
+        255 * poly.energy(@fr.stiff)/@fr.max_energy,
+        255 * (1 - poly.energy(@fr.stiff)/@fr.max_energy), 0)
+      elsif @fr.max_energy < 1 and @fr.max_energy > 0.1
+        color = Gosu::Color.argb(255, 
+        255 * poly.energy(@fr.stiff),
+        255 * (1 - poly.energy(@fr.stiff)), 0)
+      else
+        color = Gosu::Color.argb(255, 
+        2550 * poly.energy(@fr.stiff),
+        255 * (1 - 10 * poly.energy(@fr.stiff)), 0)
+      end
+
+      draw_triangle_framework(poly.p1.x + poly.p1.dx + trans, poly.p1.y + poly.p1.dy, 
+                              poly.p2.x + poly.p2.dx + trans, poly.p2.y + poly.p2.dy,
+                              poly.p3.x + poly.p3.dx + trans, poly.p3.y + poly.p3.dy, color)
+    end
+  end
+
+  def status_2_draw
+    @font = Gosu::Font.new(self, "Times New Roman", 24)
+
+    write("Time together        = #{Time.now - @begin_time}", 600, 80)
+    write("Time since last tick = #{@time_step}", 600, 100)
+    write("Counting time        = #{@counting_time}", 600, 120)
+    write("Number of points     = #{@fr.points.length}", 600, 150)
+    write("Goal function        = #{@goal}", 600, 170)
+    write("Optimization         = #{@optimization}%", 600, 190)
+
+    draw_quad(0, 0, 0xffffffff, 
+              @window_x, 0, 0xffffffff, 
+              @window_x, @window_y, 0xffffffff, 
+              0, @window_y, 0xffffffff, 0)
+            
+    @fr.lines.each do |line|
+      draw_line_framework(line.p1.x + line.p1.dx, line.p1.y + line.p1.dy,
+                          line.p2.x + line.p2.dx, line.p2.y + line.p2.dy)
+    end
+
+    trans = 20
+
+    @fr.lines.each do |line|
+      draw_line_framework(line.p1.x + line.p1.dx + trans, line.p1.y + line.p1.dy,
+                          line.p2.x + line.p2.dx + trans, line.p2.y + line.p2.dy)
+    end
+
+    @fr.polygons.each do |poly|
+      if @fr.max_goal > 1
+        color = Gosu::Color.argb(255, 
+        255 * (poly.deletion_goal(@fr.stiff)/@fr.max_goal),
+        255 * (1 - poly.deletion_goal(@fr.stiff)/@fr.max_goal), 0)
+      else
+        color = Gosu::Color.argb(255, 
+        255 * (poly.deletion_goal(@fr.stiff)),
+        255 * (1 - poly.deletion_goal(@fr.stiff)), 0)
+      end
+
+      draw_triangle_framework(poly.p1.x + poly.p1.dx + trans, poly.p1.y + poly.p1.dy, 
+                              poly.p2.x + poly.p2.dx + trans, poly.p2.y + poly.p2.dy,
+                              poly.p3.x + poly.p3.dx + trans, poly.p3.y + poly.p3.dy, color)
+    end
+
+    (0...(@goals_arr.length-1)).each do |i|
+      # draw_line_framework(550 + 5*i, @goals_arr[i]/@goal_scale, 550 + 10*i, @goals_arr[i+1]/@goal_scale )
+      draw_line_framework(40.0 + i/2.0, 20* @goals_arr[i]/@goal_scale, 40.5 + i / 2.0, 20* @goals_arr[i+1]/@goal_scale )
+    end
+
+  end
+  
+  def draw
+    case @status 
+    when 1
+      status_1_draw
+    when 2
+      status_2_draw
+    when 3
+      status_2_draw
+    end
+  end
+end
+
+window = GameWindow.new
+window.show
