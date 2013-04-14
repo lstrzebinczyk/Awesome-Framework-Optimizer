@@ -1,0 +1,12 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    gosu (0.7.47.1)
+    narray (0.6.0.8)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  gosu
+  narray

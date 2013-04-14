@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 module LolStiffMatrix
   def stiff_matrix_from(framework)
     stiff_matrix = Array.new(self.size){|i| []}

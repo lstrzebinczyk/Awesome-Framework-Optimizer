@@ -1,7 +1,3 @@
-#!/usr/bin/env ruby
-
-require 'narray'
-
 module Solver
 
   #This method actially solves system of linear equations

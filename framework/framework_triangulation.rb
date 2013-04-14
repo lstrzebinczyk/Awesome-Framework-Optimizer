@@ -1,5 +1,3 @@
-require "narray"
-
 module FrameworkTriangulation
 
   #Bowyer-Watson Algorithm

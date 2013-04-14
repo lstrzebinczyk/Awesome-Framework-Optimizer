@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + "/framework/framework.rb")
-require 'rubygems'
 require 'gosu'
+require "narray"
 
 class Constants
   attr_reader :stiff, :force, :energy_limit, :min_field, :max_field
