@@ -34,13 +34,4 @@ class Line
   def draw
     Presenter.new(self).draw
   end
-
-  # These 2 methods were very likely used to print jpg files
-  # def draw(picture)
-  #   picture.line(p1.x, p1.y, p2.x, p2.y)
-  # end
-
-  # def draw_moved(picture)
-  #   picture.line(p1.x + p1.dx, p1.y + p1.dy, p2.x + p2.dx, p2.y + p2.dy)
-  # end
 end

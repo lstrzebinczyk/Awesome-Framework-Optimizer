@@ -60,13 +60,4 @@ class Point
     @x += @dx
     @y += @dy
   end
-
-  def draw(picture)
-    if self.block_x and self.block_y
-      picture.stroke('red')
-      picture.stroke_width(0.01)
-      picture.fill_opacity(0)
-      picture.circle(x, y, x + 0.03, y)
-    end
-  end
 end
