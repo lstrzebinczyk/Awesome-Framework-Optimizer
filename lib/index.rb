@@ -16,14 +16,12 @@ require_relative 'configuration'
 
 class GameWindow < Gosu::Window
 
+  def configuration
+    @config ||= Configuration.new
+  end
+
   def initialize
-    @window_x = 1200
-    @window_y = 600
-
-    @scale = 15
-    @translate = @window_y * 0.1
-
-    @fr = Framework.new(Configuration.new)
+    @fr = Framework.new(configuration)
     @time = Time.now
     @begin_time = Time.now
 
@@ -32,7 +30,7 @@ class GameWindow < Gosu::Window
 
     @goals_arr = []
 
-    super(@window_x, @window_y, false)
+    super(configuration.window_x, configuration.window_y, false)
   end
 
   def status_1_update
@@ -78,14 +76,14 @@ class GameWindow < Gosu::Window
   end
 
   def draw_line_framework(p1_x, p1_y, p2_x, p2_y)
-    draw_line(@translate + p1_x * @scale, @window_y - 1.0 * (@translate + p1_y * @scale), 0xff000000, 
-              @translate + p2_x * @scale, @window_y - 1.0 * (@translate + p2_y * @scale), 0xff000000)
+    draw_line(configuration.translate + p1_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p1_y * configuration.scale), 0xff000000, 
+              configuration.translate + p2_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p2_y * configuration.scale), 0xff000000)
   end
 
   def draw_triangle_framework(p1_x, p1_y, p2_x, p2_y, p3_x, p3_y, color)
-    draw_triangle(@translate + p1_x * @scale, @window_y - 1.0 * (@translate + p1_y * @scale), color, 
-                  @translate + p2_x * @scale, @window_y - 1.0 * (@translate + p2_y * @scale), color,
-                  @translate + p3_x * @scale, @window_y - 1.0 * (@translate + p3_y * @scale), color,
+    draw_triangle(configuration.translate + p1_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p1_y * configuration.scale), color, 
+                  configuration.translate + p2_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p2_y * configuration.scale), color,
+                  configuration.translate + p3_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p3_y * configuration.scale), color,
                   0)
   end
 
@@ -103,9 +101,9 @@ class GameWindow < Gosu::Window
     write("Max energy           = #{@fr.max_energy}", 600, 170)
 
     draw_quad(0, 0, 0xffffffff, 
-              @window_x, 0, 0xffffffff, 
-              @window_x, @window_y, 0xffffffff, 
-              0, @window_y, 0xffffffff, 0)
+              configuration.window_x, 0, 0xffffffff, 
+              configuration.window_x, configuration.window_y, 0xffffffff, 
+              0, configuration.window_y, 0xffffffff, 0)
             
     @fr.lines.each do |line|
       draw_line_framework(line.p1.x + line.p1.dx, line.p1.y + line.p1.dy,
@@ -151,9 +149,9 @@ class GameWindow < Gosu::Window
     write("Optimization         = #{@optimization}%", 600, 190)
 
     draw_quad(0, 0, 0xffffffff, 
-              @window_x, 0, 0xffffffff, 
-              @window_x, @window_y, 0xffffffff, 
-              0, @window_y, 0xffffffff, 0)
+              configuration.window_x, 0, 0xffffffff, 
+              configuration.window_x, configuration.window_y, 0xffffffff, 
+              0, configuration.window_y, 0xffffffff, 0)
             
     @fr.lines.each do |line|
       draw_line_framework(line.p1.x + line.p1.dx, line.p1.y + line.p1.dy,

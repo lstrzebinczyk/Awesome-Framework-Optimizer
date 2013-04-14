@@ -1,5 +1,5 @@
 class Configuration
-  attr_reader :stiff, :force, :energy_limit, :min_field, :max_field
+  attr_reader :stiff, :force, :energy_limit, :min_field, :max_field, :window_x, :window_y, :scale, :translate
 
   def initialize
     @stiff = 20.0
@@ -9,6 +9,12 @@ class Configuration
     @max_field = 40
     @min_field = 0.1
     @min_angle = 40
+
+    @window_x = 1200
+    @window_y = 600
+
+    @scale = 15
+    @translate = @window_y * 0.1
   end
 
   def max_angle_cos
