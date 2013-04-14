@@ -31,11 +31,16 @@ class Line
     Math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
   end
 
-  def draw(picture)
-    picture.line(p1.x, p1.y, p2.x, p2.y)
+  def draw
+    Presenter.new(self).draw
   end
 
-  def draw_moved(picture)
-    picture.line(p1.x + p1.dx, p1.y + p1.dy, p2.x + p2.dx, p2.y + p2.dy)
-  end
+  # These 2 methods were very likely used to print jpg files
+  # def draw(picture)
+  #   picture.line(p1.x, p1.y, p2.x, p2.y)
+  # end
+
+  # def draw_moved(picture)
+  #   picture.line(p1.x + p1.dx, p1.y + p1.dy, p2.x + p2.dx, p2.y + p2.dy)
+  # end
 end

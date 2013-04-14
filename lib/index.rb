@@ -13,11 +13,12 @@ require_relative 'fem/lol_stiff_matrix'
 require_relative 'fem/solver'
 require_relative 'fem/fem_equation'
 require_relative 'configuration'
+require_relative 'presenters/line'
 
 class GameWindow < Gosu::Window
 
   def configuration
-    @config ||= Configuration.new
+    @config ||= Configuration.global(self)
   end
 
   def initialize
@@ -75,11 +76,6 @@ class GameWindow < Gosu::Window
     end
   end
 
-  def draw_line_framework(p1_x, p1_y, p2_x, p2_y)
-    draw_line(configuration.translate + p1_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p1_y * configuration.scale), 0xff000000, 
-              configuration.translate + p2_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p2_y * configuration.scale), 0xff000000)
-  end
-
   def draw_triangle_framework(p1_x, p1_y, p2_x, p2_y, p3_x, p3_y, color)
     draw_triangle(configuration.translate + p1_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p1_y * configuration.scale), color, 
                   configuration.translate + p2_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p2_y * configuration.scale), color,
@@ -105,17 +101,13 @@ class GameWindow < Gosu::Window
               configuration.window_x, configuration.window_y, 0xffffffff, 
               0, configuration.window_y, 0xffffffff, 0)
             
-    @fr.lines.each do |line|
-      draw_line_framework(line.p1.x + line.p1.dx, line.p1.y + line.p1.dy,
-                          line.p2.x + line.p2.dx, line.p2.y + line.p2.dy)
+    @fr.draw_lines!
+
+    translate(280, 0) do 
+      @fr.draw_lines!
     end
 
     trans = 20
-
-    @fr.lines.each do |line|
-      draw_line_framework(line.p1.x + line.p1.dx + trans, line.p1.y + line.p1.dy,
-                          line.p2.x + line.p2.dx + trans, line.p2.y + line.p2.dy)
-    end
 
     @fr.polygons.each do |poly|
       if @fr.max_energy > 1
@@ -153,16 +145,10 @@ class GameWindow < Gosu::Window
               configuration.window_x, configuration.window_y, 0xffffffff, 
               0, configuration.window_y, 0xffffffff, 0)
             
-    @fr.lines.each do |line|
-      draw_line_framework(line.p1.x + line.p1.dx, line.p1.y + line.p1.dy,
-                          line.p2.x + line.p2.dx, line.p2.y + line.p2.dy)
-    end
+    @fr.draw_lines!
 
-    trans = 20
-
-    @fr.lines.each do |line|
-      draw_line_framework(line.p1.x + line.p1.dx + trans, line.p1.y + line.p1.dy,
-                          line.p2.x + line.p2.dx + trans, line.p2.y + line.p2.dy)
+    translate(280, 0) do 
+      @fr.draw_lines!
     end
 
     @fr.polygons.each do |poly|
@@ -186,6 +172,12 @@ class GameWindow < Gosu::Window
       draw_line_framework(40.0 + i/2.0, 20* @goals_arr[i]/@goal_scale, 40.5 + i / 2.0, 20* @goals_arr[i+1]/@goal_scale )
     end
 
+  end
+
+  def draw_line_framework(p1_x, p1_y, p2_x, p2_y)
+    #used only in function above, to be deleted shortly
+    draw_line(configuration.translate + p1_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p1_y * configuration.scale), 0xff000000, 
+              configuration.translate + p2_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p2_y * configuration.scale), 0xff000000)
   end
   
   def draw

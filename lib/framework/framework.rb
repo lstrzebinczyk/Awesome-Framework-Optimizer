@@ -7,6 +7,10 @@ class Framework
   include FrameworkSolver
   include FrameworkOptimize
 
+  def draw_lines!
+    lines.each{|line| line.draw }
+  end
+
   def initialize(constants)
     @points = []
 
