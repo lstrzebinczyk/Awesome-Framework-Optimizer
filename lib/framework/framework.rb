@@ -1,13 +1,3 @@
-#!/usr/bin/env ruby
-require File.expand_path(File.dirname(__FILE__) + "/../helper_classes/point.rb")
-require File.expand_path(File.dirname(__FILE__) + "/../helper_classes/line.rb")
-require File.expand_path(File.dirname(__FILE__) + "/../helper_classes/polygon.rb")
-require File.expand_path(File.dirname(__FILE__) + "/framework_triangulation.rb")
-require File.expand_path(File.dirname(__FILE__) + "/framework_multigrid.rb")
-require File.expand_path(File.dirname(__FILE__) + "/framework_solver.rb")
-require File.expand_path(File.dirname(__FILE__) + "/framework_optimize.rb")
-require File.expand_path(File.dirname(__FILE__) + "/../fem/fem_equation.rb")
-
 class Framework
   attr_accessor :points, :lines, :polygons, :stiff, :constants
   attr_accessor :max_goal, :max_energy

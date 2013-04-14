@@ -1,6 +1,3 @@
-require File.expand_path(File.dirname(__FILE__) + "/lol_stiff_matrix.rb")
-require File.expand_path(File.dirname(__FILE__) + "/solver.rb")
-
 class FemEquation
   attr_accessor :lol_matrix, :force, :size
 

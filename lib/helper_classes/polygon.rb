@@ -1,7 +1,3 @@
-#!/usr/bin/env ruby
-
-require File.expand_path(File.dirname(__FILE__) + "/line.rb")
-
 class Polygon
   attr_accessor :p1, :p2, :p3, :cosine, :energy, :deletion_goal
 

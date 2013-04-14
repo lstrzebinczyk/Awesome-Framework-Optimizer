@@ -1,7 +1,3 @@
-#!/usr/bin/env ruby
-
-require File.expand_path(File.dirname(__FILE__) + "/point.rb")
-
 class Line
   attr_accessor :p1, :p2, :to_delete
 

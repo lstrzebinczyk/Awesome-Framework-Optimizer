@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 class Point
   attr_accessor :id, :x, :y, :dx, :dy, :fx, :fy, :block_x, :block_y, :temporary
 

@@ -1,6 +1,17 @@
-require File.expand_path(File.dirname(__FILE__) + "/framework/framework.rb")
 require 'gosu'
-require "narray"
+require 'narray'
+
+require_relative 'helper_classes/line'
+require_relative 'helper_classes/point'
+require_relative 'helper_classes/polygon'
+require_relative 'framework/framework_multigrid'
+require_relative 'framework/framework_optimize'
+require_relative 'framework/framework_solver'
+require_relative 'framework/framework_triangulation'
+require_relative 'framework/framework'
+require_relative 'fem/lol_stiff_matrix'
+require_relative 'fem/solver'
+require_relative 'fem/fem_equation'
 
 class Constants
   attr_reader :stiff, :force, :energy_limit, :min_field, :max_field
