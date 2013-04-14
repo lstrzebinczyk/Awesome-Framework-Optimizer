@@ -49,6 +49,3 @@ class GameWindow < Gosu::Window
     @background ||= Background.new
   end
 end
-
-window = GameWindow.new
-window.show

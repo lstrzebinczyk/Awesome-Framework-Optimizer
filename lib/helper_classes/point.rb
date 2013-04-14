@@ -12,20 +12,6 @@ class Point
     @block_x = false
     @block_y = false
     @temporary = temporary
-    self
-  end
-
-  def between_points(p1, p2, id)
-    @id  = id
-    @x   = 0.5 * (p1.x + p2.x)
-    @y   = 0.5 * (p1.y + p2.y)
-    @dx  = 0.5 * (p1.dx + p2.dx)
-    @dy  = 0.5 * (p1.dy + p2.dy)
-    @fx  = 0.5 * (p1.fx + p2.fx)
-    @fy  = 0.5 * (p1.fy + p2.fy)
-    @block_x = (p1.block_x and p2.block_x)
-    @block_y = (p1.block_y and p2.block_y)
-    self
   end
 
   def reset
