@@ -1,8 +1,9 @@
 module Task
   class Triangulation
-    def initialize(framework, statistics)
+    def initialize(framework, window)
       @framework = framework
-      @statistics = statistics
+      @statistics = Statistics.new(@framework)
+      @window = window
     end
 
     def update
@@ -24,15 +25,15 @@ module Task
               
       @framework.draw_empty
 
-      window.translate(280, 0) do 
+      @window.translate(280, 0) do 
         @framework.draw_status_1
       end
     end
 
-    private
-
-    def window
-      Configuration.global.window
+    def begin
+      @window.task = self
+      Configuration.global.window = @window
+      @window.show
     end
   end
 end

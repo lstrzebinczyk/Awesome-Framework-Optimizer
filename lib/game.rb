@@ -1,4 +1,7 @@
 require_relative 'index'
 
-window = GameWindow.new
-window.show
+task = Task::Triangulation.new(Framework.new, GameWindow.new)
+task.begin
+
+# window = GameWindow.new
+# window.show

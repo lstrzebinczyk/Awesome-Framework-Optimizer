@@ -7,6 +7,10 @@ class Framework
   include FrameworkSolver
   include FrameworkOptimize
 
+  def config
+    @configuration = Configuration.global
+  end
+
   def draw_empty
     Presenter.new(self).draw_empty
   end
@@ -19,7 +23,7 @@ class Framework
     Presenter.new(self).draw_status_2
   end
 
-  def initialize(constants)
+  def initialize
     @points = []
 
     @points << Point.new(0, 0)
@@ -35,8 +39,8 @@ class Framework
 
     @lines = []
     @polygons = []
-    @stiff = constants.stiff
-    @constants = constants
+    @stiff = config.stiff
+    @constants = config
     @new_points = []
     @max_goal = 0
     @max_energy = 0

@@ -1,5 +1,6 @@
 class Configuration
   attr_reader :stiff, :force, :energy_limit, :min_field, :max_field, :window_x, :window_y, :scale, :translate, :window
+  attr_writer :window
 
   def initialize(window = nil)
     @stiff = 20.0
@@ -15,15 +16,13 @@ class Configuration
 
     @scale = 15
     @translate = @window_y * 0.1
-
-    @window = window if window
   end
 
   def max_angle_cos
     Math.cos (@min_angle * Math::PI / 360.0)
   end
 
-  def self.global(window = nil)
-    @config ||= self.new(window)
+  def self.global
+    @config ||= self.new
   end
 end

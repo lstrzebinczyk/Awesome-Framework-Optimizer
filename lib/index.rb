@@ -23,29 +23,4 @@ require_relative 'presenters/statistics'
 require_relative 'task/triangulation'
 require_relative 'task/optimization'
 require_relative 'task/idle'
-
-class GameWindow < Gosu::Window
-  def initialize
-    @configuration = Configuration.global(self)
-    @framework = Framework.new(@configuration)
-    @statistics = Statistics.new(@framework)
-    @task = Task::Triangulation.new(@framework, @statistics)
-
-    super(@configuration.window_x, @configuration.window_y, false)
-  end
-
-  def update
-    @task = @task.update
-  end
-
-  def draw
-    background.draw
-    @task.draw
-  end
-
-  private
-  
-  def background
-    @background ||= Background.new
-  end
-end
+require_relative 'window/gosu'
