@@ -20,88 +20,33 @@ require_relative 'presenters/background'
 require_relative 'presenters/polygon'
 require_relative 'presenters/framework'
 require_relative 'presenters/statistics'
+require_relative 'task/triangulation'
+require_relative 'task/optimization'
+require_relative 'task/idle'
 
 class GameWindow < Gosu::Window
-  def configuration
-    @config ||= Configuration.global(self)
-  end
-
-  def background
-    @background ||= Background.new
-  end
-
   def initialize
-    @fr = Framework.new(configuration)
-    @statistics = Statistics.new(@fr)
-    @status = 1
+    @configuration = Configuration.global(self)
+    @framework = Framework.new(@configuration)
+    @statistics = Statistics.new(@framework)
+    @task = Task::Triangulation.new(@framework, @statistics)
 
-    super(configuration.window_x, configuration.window_y, false)
-  end
-
-  def status_1_update
-    keep_working = @fr.make_denser
-    @statistics.update!
-
-    unless keep_working
-      @fr.perform_triangulation
-      @statistics.goals << @fr.goal
-      @status += 1
-    end
-  end
-
-  def status_2_update
-    @goal = @fr.optimize
-    @statistics.update!(@goal)
-
-    if @statistics.good_enough?
-      @status += 1
-    end
+    super(@configuration.window_x, @configuration.window_y, false)
   end
 
   def update
-    case @status
-    when 1
-      status_1_update
-    when 2
-      status_2_update
-    when 3
-      exit
-    end
+    @task = @task.update
   end
 
-  def status_1_draw
-    @statistics.draw_status_1
-
-    background.draw
-            
-    @fr.draw_empty
-
-    translate(280, 0) do 
-      @fr.draw_status_1
-    end
-  end
-
-  def status_2_draw
-    @statistics.draw_status_2
-
-    background.draw
-            
-    @fr.draw_empty
-
-    translate(280, 0) do 
-      @fr.draw_status_2
-    end
-  end
-  
   def draw
-    case @status 
-    when 1
-      status_1_draw
-    when 2
-      status_2_draw
-    when 3
-      status_2_draw
-    end
+    background.draw
+    @task.draw
+  end
+
+  private
+  
+  def background
+    @background ||= Background.new
   end
 end
 

@@ -18,15 +18,15 @@ class Statistics
       write("Goal function        = #{@statistics.goals.last}",      600, 170)
       write("Optimization         = #{@statistics.optimization}%",   600, 190)
 
-      (0...(@statistics.goals.length-1)).each do |i|
-        configuration.window.draw_line_framework(40.0 + i/2.0, 20* @statistics.goals[i]/@statistics.goals.first, 40.5 + i / 2.0, 20* @statistics.goals[i+1]/@statistics.goals.first )
+      (1...(@statistics.goals.length-1)).each do |i|
+        draw_line_framework(40.0 + i/2.0, 20* @statistics.goals[i]/@statistics.goals.first, 40.5 + i / 2.0, 20* @statistics.goals[i+1]/@statistics.goals.first )
       end
     end
 
     private
 
     def draw_line_framework(p1_x, p1_y, p2_x, p2_y)
-      draw_line(configuration.translate + p1_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p1_y * configuration.scale), 0xff000000, 
+      configuration.window.draw_line(configuration.translate + p1_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p1_y * configuration.scale), 0xff000000, 
                 configuration.translate + p2_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p2_y * configuration.scale), 0xff000000)
     end
 
