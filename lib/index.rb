@@ -4,6 +4,7 @@ require 'narray'
 require_relative 'helper_classes/line'
 require_relative 'helper_classes/point'
 require_relative 'helper_classes/polygon'
+require_relative 'helper_classes/background'
 require_relative 'framework/framework_multigrid'
 require_relative 'framework/framework_optimize'
 require_relative 'framework/framework_solver'
@@ -14,11 +15,16 @@ require_relative 'fem/solver'
 require_relative 'fem/fem_equation'
 require_relative 'configuration'
 require_relative 'presenters/line'
+require_relative 'presenters/background'
 
 class GameWindow < Gosu::Window
 
   def configuration
     @config ||= Configuration.global(self)
+  end
+
+  def background
+    @background ||= Background.new
   end
 
   def initialize
@@ -96,10 +102,7 @@ class GameWindow < Gosu::Window
     write("Number of points     = #{@fr.points.length}", 600, 150)
     write("Max energy           = #{@fr.max_energy}", 600, 170)
 
-    draw_quad(0, 0, 0xffffffff, 
-              configuration.window_x, 0, 0xffffffff, 
-              configuration.window_x, configuration.window_y, 0xffffffff, 
-              0, configuration.window_y, 0xffffffff, 0)
+    background.draw
             
     @fr.draw_lines!
 
@@ -140,10 +143,7 @@ class GameWindow < Gosu::Window
     write("Goal function        = #{@goal}", 600, 170)
     write("Optimization         = #{@optimization}%", 600, 190)
 
-    draw_quad(0, 0, 0xffffffff, 
-              configuration.window_x, 0, 0xffffffff, 
-              configuration.window_x, configuration.window_y, 0xffffffff, 
-              0, configuration.window_y, 0xffffffff, 0)
+    background.draw
             
     @fr.draw_lines!
 
