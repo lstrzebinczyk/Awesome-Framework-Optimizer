@@ -7,8 +7,16 @@ class Framework
   include FrameworkSolver
   include FrameworkOptimize
 
-  def draw_lines!
-    lines.each{|line| line.draw }
+  def draw_empty
+    Presenter.new(self).draw_empty
+  end
+
+  def draw_status_1
+    Presenter.new(self).draw_status_1
+  end
+
+  def draw_status_2
+    Presenter.new(self).draw_status_2
   end
 
   def initialize(constants)

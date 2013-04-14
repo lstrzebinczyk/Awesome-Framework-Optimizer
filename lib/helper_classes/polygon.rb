@@ -1,6 +1,14 @@
 class Polygon
   attr_accessor :p1, :p2, :p3, :cosine, :energy, :deletion_goal
 
+  def draw_more_complicated(framework)
+    Presenter.new(self, framework).draw_more_complicated
+  end
+
+  def draw_less_complicated(framework)
+    Presenter.new(self, framework).draw_less_complicated
+  end
+
   def initialize(p1, p2, p3)
     #Initialized in such way that points are stored in counterclockwise order
 
