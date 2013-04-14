@@ -12,24 +12,7 @@ require_relative 'framework/framework'
 require_relative 'fem/lol_stiff_matrix'
 require_relative 'fem/solver'
 require_relative 'fem/fem_equation'
-
-class Constants
-  attr_reader :stiff, :force, :energy_limit, :min_field, :max_field
-
-  def initialize
-    @stiff = 20.0
-    @force = -7.5
-
-    @energy_limit = 0.05
-    @max_field = 40
-    @min_field = 0.1
-    @min_angle = 40
-  end
-
-  def max_angle_cos
-    Math.cos (@min_angle * Math::PI / 360.0)
-  end
-end
+require_relative 'configuration'
 
 class GameWindow < Gosu::Window
 
@@ -40,7 +23,7 @@ class GameWindow < Gosu::Window
     @scale = 15
     @translate = @window_y * 0.1
 
-    @fr = Framework.new(Constants.new)
+    @fr = Framework.new(Configuration.new)
     @time = Time.now
     @begin_time = Time.now
 
