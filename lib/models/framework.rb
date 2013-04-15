@@ -241,19 +241,6 @@ class Framework
     end
   end
 
-  def line_circle_contain_any_point(line)
-    points.each do |point|
-      if point != line.p1 and point != line.p2
-        if line.inside_circle?(point)
-          return true
-          break
-        end
-      end
-    end
-
-    return false
-  end
-
   #TODO
   #Poprawić w oparciu o proste brzegowe
   def includes_point?(point)
