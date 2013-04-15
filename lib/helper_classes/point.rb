@@ -14,6 +14,14 @@ class Point
     @temporary = temporary
   end
 
+  def moved_x
+    @x + @dx
+  end
+
+  def moved_y
+    @y + @dy
+  end
+
   def reset
     @dx = 0
     @dy = 0

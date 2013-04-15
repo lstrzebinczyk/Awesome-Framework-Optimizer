@@ -16,9 +16,9 @@ class Polygon
     private
 
     def draw(color)
-      draw_triangle_framework(@polygon.p1.x + @polygon.p1.dx, @polygon.p1.y + @polygon.p1.dy, 
-                              @polygon.p2.x + @polygon.p2.dx, @polygon.p2.y + @polygon.p2.dy,
-                              @polygon.p3.x + @polygon.p3.dx, @polygon.p3.y + @polygon.p3.dy, color)
+      draw_triangle_framework(@polygon.p1.moved_x, @polygon.p1.moved_y, 
+                              @polygon.p2.moved_x, @polygon.p2.moved_y,
+                              @polygon.p3.moved_x, @polygon.p3.moved_y, color)
     end
 
     def draw_triangle_framework(p1_x, p1_y, p2_x, p2_y, p3_x, p3_y, color)

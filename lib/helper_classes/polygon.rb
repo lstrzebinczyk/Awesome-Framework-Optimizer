@@ -210,8 +210,8 @@ class Polygon
   end
 
   private
-  
+
   def moved_field
-    Field.new(p1.x + p1.dx, p1.y + p1.dy, p2.x + p2.dx, p2.y + p2.dy, p3.x + p3.dx, p3.y + p3.dy).to_f
+    Field.new(p1.moved_x, p1.moved_y, p2.moved_x, p2.moved_y, p3.moved_x, p3.moved_y).to_f
   end
 end

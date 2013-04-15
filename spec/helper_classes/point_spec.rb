@@ -30,6 +30,18 @@ describe Point do
     Point.new(0, 0, true).temporary.should == true
   end
 
+  describe 'moved_x' do
+    it 'returns @x + @dx' do
+      nonempty_point.moved_x.should == 2
+    end
+  end
+
+  describe 'moved_y' do
+    it 'returns @y + @dy' do
+      nonempty_point.moved_y.should == 2
+    end
+  end
+
   describe 'reset' do
     it 'sets @dx, @dy, @fx, @fy to 0 and @block_x, @block_y to false' do
       point = nonempty_point

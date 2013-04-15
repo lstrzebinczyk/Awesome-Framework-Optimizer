@@ -5,8 +5,8 @@ class Line
     end
 
     def draw
-      draw_line_framework(@line.p1.x + @line.p1.dx, @line.p1.y + @line.p1.dy,
-                          @line.p2.x + @line.p2.dx, @line.p2.y + @line.p2.dy)
+      draw_line_framework(@line.p1.moved_x, @line.p1.moved_y,
+                          @line.p2.moved_x, @line.p2.moved_y)
     end
 
     private
