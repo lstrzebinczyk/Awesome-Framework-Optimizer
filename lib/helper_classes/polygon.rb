@@ -90,14 +90,7 @@ class Polygon
   end
 
   def good_for_refining?(max_cosine, min_field, max_field)
-    c = self.cosine
-    field = self.field
-
-    if (c > max_cosine and field > min_field) or field > max_field
-      return true
-    else
-      return false
-    end
+    (@cosine > max_cosine and @field > min_field) or @field > max_field
   end
 
   def energy(stiff)
