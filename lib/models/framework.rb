@@ -18,6 +18,10 @@ class Framework
     Presenter.new(self).draw_status_2
   end
 
+  def force_vector
+    points.map{|point| [point.fx, point.fy]}.flatten
+  end
+
   def select_new_points
     dividing_polygon = polygons.max_by{|poly| poly.energy(self.stiff)}
     @new_points += dividing_polygon.dividing_points
