@@ -35,6 +35,10 @@ class Polygon
     @circle = Circle.new(self)
   end
 
+  def dividing_points
+    [@p1 + @p2, @p1 + @p3, @p2 + @p3]
+  end
+
   def stiff_matrix(stiff)
     @stiff_matrix ||= begin
       StiffMatrix.new(stiff).tap do |matrix|

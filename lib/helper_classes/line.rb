@@ -24,13 +24,13 @@ class Line
   end
 
   def midpoint
-    @midpoint ||= Point.new(0.5 * (p1.x + p2.x), 0.5 * (p1.y + p2.y)).tap do |point|
+    @midpoint ||= (@p1 + @p2).tap do |point|
       point.id = 0
     end
   end
 
   def length
-    @length ||= Math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
+    @length ||= Math.sqrt((@p1.x - @p2.x)**2 + (@p1.y - @p2.y)**2)
   end
 
   def draw

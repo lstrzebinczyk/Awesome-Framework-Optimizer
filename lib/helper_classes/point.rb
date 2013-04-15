@@ -14,6 +14,10 @@ class Point
     @temporary = temporary
   end
 
+  def +(other)
+    Point.new(0.5 * (@x + other.x), 0.5 * (@y + other.y))
+  end
+
   def moved_x
     @x + @dx
   end

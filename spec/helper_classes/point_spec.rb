@@ -30,6 +30,14 @@ describe Point do
     Point.new(0, 0, true).temporary.should == true
   end
 
+  describe "+" do
+    it 'creates new point between given two' do
+      new_point = Point.new(0, 0) + Point.new(2, 2)
+      new_point.x.should == 1
+      new_point.y.should == 1
+    end
+  end
+
   describe 'moved_x' do
     it 'returns @x + @dx' do
       nonempty_point.moved_x.should == 2
