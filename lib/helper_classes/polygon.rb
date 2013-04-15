@@ -35,6 +35,10 @@ class Polygon
     @circle = Circle.new(self)
   end
 
+  def temporary?
+    @p1.temporary? or @p2.temporary? or @p3.temporary?
+  end
+
   def dividing_points
     [@p1 + @p2, @p1 + @p3, @p2 + @p3]
   end

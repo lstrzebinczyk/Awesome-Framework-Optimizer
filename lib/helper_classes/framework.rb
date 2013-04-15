@@ -188,7 +188,7 @@ class Framework
   def basic_triangulation
     in_big_triangle do
       points.each do |point|
-        triangulate_point(point) unless point.temporary
+        triangulate_point(point) unless point.temporary?
       end
     end
 
@@ -404,8 +404,8 @@ class Framework
     yield
 
     #REMOVING THE BIG TRIANGLE
-    lines.delete_if {|line| line.p1.temporary or line.p2.temporary}
-    polygons.delete_if{|polygon| polygon.p1.temporary or polygon.p2.temporary or polygon.p3.temporary}
-    points.delete_if {|pt| pt.temporary}
+    points.delete_if {|pt| pt.temporary? }
+    lines.delete_if {|line| line.temporary? }
+    polygons.delete_if{|polygon| polygon.temporary? }
   end
 end

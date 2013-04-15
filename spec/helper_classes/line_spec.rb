@@ -13,6 +13,12 @@ describe Line do
     end
   end
 
+  def temporary_point
+    Point.new(0, 0, true).tap do |point|
+      point.id = 3
+    end
+  end
+
   def line
     @line ||= Line.new(point_1, point_2)
   end
@@ -26,6 +32,17 @@ describe Line do
   def outside_point
     Point.new(-1, 0).tap do |point|
       point.id = 3
+    end
+  end
+
+  describe 'temporary?' do
+    it 'returns false if points are not temporary' do
+      line.temporary?.should == false
+    end
+
+    it 'returns true if either point is temporary' do
+      Line.new(point_1, temporary_point).temporary?.should == true
+      Line.new(temporary_point, point_1).temporary?.should == true
     end
   end
 

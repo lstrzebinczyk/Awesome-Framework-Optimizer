@@ -11,6 +11,10 @@ class Line
     end
   end
 
+  def temporary?
+    @p1.temporary? or @p2.temporary?
+  end
+
   def inside_circle?(point)
     Line.new(midpoint, @p1).length > Line.new(midpoint, point).length
   end

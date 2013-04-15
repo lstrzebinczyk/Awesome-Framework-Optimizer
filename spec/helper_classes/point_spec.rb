@@ -23,11 +23,16 @@ describe Point do
     point.fy.should == 0
     point.block_x.should == false
     point.block_y.should == false
-    point.temporary.should == false
   end
 
-  it "sets @temporary value as 3rd argument" do
-    Point.new(0, 0, true).temporary.should == true
+  describe 'temporary?' do
+    it 'returns false for regular points' do
+      Point.new(0, 0).temporary?.should == false
+    end
+
+    it 'returns true for points with 3rd params set to true' do
+      Point.new(0, 0, true).temporary?.should == true
+    end
   end
 
   describe "+" do

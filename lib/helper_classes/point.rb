@@ -1,5 +1,5 @@
 class Point
-  attr_accessor :id, :x, :y, :dx, :dy, :fx, :fy, :block_x, :block_y, :temporary
+  attr_accessor :id, :x, :y, :dx, :dy, :fx, :fy, :block_x, :block_y
 
   def initialize(x, y, temporary = false)
     @id = nil
@@ -12,6 +12,10 @@ class Point
     @block_x = false
     @block_y = false
     @temporary = temporary
+  end
+
+  def temporary?
+    @temporary
   end
 
   def +(other)
