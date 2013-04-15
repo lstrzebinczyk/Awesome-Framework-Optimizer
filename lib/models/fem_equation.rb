@@ -5,7 +5,6 @@ class FemEquation
     @size = framework.points.length * 2
     @lol_matrix = stiff_matrix_from(framework)
     @force = force_vector_from(framework)
-    self
   end
 
   def stiff_matrix_from(framework)
