@@ -38,7 +38,7 @@ module FrameworkTriangulation
       polygon_to_divide = polygon_array.max_by{|poly| poly.cosine}
 
       unless polygon_to_divide.nil?
-        potential_new_point = polygon_to_divide.mid_of_circle
+        potential_new_point = polygon_to_divide.circle.middle
           # self.draw
           if self.includes_point?(potential_new_point)
             new_point = potential_new_point
@@ -102,7 +102,7 @@ module FrameworkTriangulation
     list_of_polygons = []
 
     polygons.each do |polygon|
-      list_of_polygons << polygon if polygon.inside_circumcircle?(point)
+      list_of_polygons << polygon if polygon.circle.include?(point)
     end
 
     list_of_polygons

@@ -1,5 +1,5 @@
 class Polygon
-  attr_accessor :p1, :p2, :p3, :cosine, :energy, :deletion_goal
+  attr_accessor :p1, :p2, :p3, :cosine, :energy, :deletion_goal, :circle
 
   def draw_more_complicated(framework)
     Presenter.new(self, framework).draw_more_complicated
@@ -25,7 +25,7 @@ class Polygon
     @cosine = self.smallest_angle_cos
     @energy = nil
     @deletion_goal = nil
-    set_mid_of_circle
+    @circle = Circle.new(self)
   end
 
   def smallest_angle_cos
@@ -42,15 +42,6 @@ class Polygon
     return [cos_a, cos_b, cos_c].max
   end
 
-  #Method determines if given point is inside a circumcircle of a poligon
-  #returns true or false, determined by determinant of matrix
-  # | var1 var2 var3 |
-  # | var4 var5 var6 |, det > 0 means true, point is inside
-  # | var7 var8 var9 |
-  def inside_circumcircle?(point)
-    return Math.sqrt((point.x - @circumcircle_x)**2 + (point.y - @circumcircle_y)**2) <= @circumcircle_r
-  end
-
   def include?(point)
     ccw_points?(p1, p2, point) and ccw_points?(p2, p3, point) and ccw_points?(p3, p1, point)
   end
@@ -65,28 +56,6 @@ class Polygon
 
   def ccw_points?(p1, p2, p3)
     (p2.x - p1.x)*(p3.y - p1.y) - (p3.x - p1.x)*(p2.y - p1.y)  > -0.0001
-  end
-
-  # Middle of circumcircle of a triangle is given in such point (Dx, Dy), that
-  # [a, b]   [Dx]    [e]
-  # [c, d] * [Dy] == [f]
-  def set_mid_of_circle
-    a = 2 * (p2.x - p1.x)
-    b = 2 * (p2.y - p1.y)
-    c = 2 * (p2.x - p3.x)
-    d = 2 * (p2.y - p3.y)
-    e = p2.x*p2.x + p2.y*p2.y - p1.x*p1.x - p1.y*p1.y
-    f = p2.x*p2.x + p2.y*p2.y - p3.x*p3.x - p3.y*p3.y
-    
-    det = a*d - b*c
-
-    @circumcircle_x = (d*e - b*f)/det
-    @circumcircle_y = (a*f - c*e)/det
-    @circumcircle_r = Math.sqrt((p1.x - @circumcircle_x)**2 + (p1.y - @circumcircle_y)**2)
-  end
-
-  def mid_of_circle
-    Point.new(@circumcircle_x, @circumcircle_y)
   end
 
   def mid_of_longest_side
