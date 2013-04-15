@@ -30,30 +30,12 @@ class Framework
     return dividing_polygon.energy(self.stiff) > self.constants.energy_limit
   end
 
-  def preprocessor
-    @fem = FemEquation.new(self)
-  end
-
-  def processor
-    @deltas = @fem.solve
-  end
-
-  def postprocessor
-    points.each_with_index do |point, i|
-      point.change_delta(@deltas[2 * i], @deltas[2 * i + 1])
-    end
-  end
-
   def optimize
-    poly = find_smelly_polygon
+    poly = polygons.max_by{|polygon| polygon.deletion_goal(self.stiff)}
     remove_polygon(poly)
     self.reload
     self.FEM_solve
     return self.goal
-  end
-
-  def find_smelly_polygon
-    self.polygons.max_by{|polygon| polygon.deletion_goal(self.stiff)}
   end
 
   def remove_polygon(poly)
@@ -66,20 +48,12 @@ class Framework
     delete_point poly.p3 if delete_point?(poly.p3)
   end
 
-  def has_point?(point)
-    self.polygons.any? {|poly| poly.has_point?(point)}
-  end
-
-  def has_line?(point1, point2)
-    self.polygons.any? {|poly| poly.has_line?(point1, point2)}
-  end
-
   def delete_point?(point)
-    not has_point? point
+    polygons.none?{|poly| poly.has_point?(point)}
   end
 
   def delete_line?(p1, p2)
-    not has_line?(p1, p2)
+    polygons.none?{|poly| poly.has_line?(point1, point2)}
   end
 
   def delete_line(p1, p2)
@@ -122,7 +96,7 @@ class Framework
     self.reload
     self.FEM_solve
     self.count_field_and_energy
-    self.perform_multigrid
+    select_new_points
   end
 
   def perform_triangulation
@@ -140,27 +114,15 @@ class Framework
   #This method actually counts Fem thing and actualizes dx and dy
   def FEM_solve
     #creates and remembers fem equation
-    preprocessor
+    @fem = FemEquation.new(self)
 
     #solves fem equation
-    processor
+    @deltas = @fem.solve
 
     #inserts fem result into mesh displacement
-    postprocessor
-  end
-
-  def perform_multigrid
-    select_new_points
-  end
-
-  def perform_optimizing
-    optimize
-  end
-
-  #This method sets lines and polygons to clear arrays
-  def reset
-    self.lines = []
-    self.polygons = []
+    points.each_with_index do |point, i|
+      point.change_delta(@deltas[2 * i], @deltas[2 * i + 1])
+    end
   end
 
   #resets data in points
@@ -222,16 +184,13 @@ class Framework
     sum
   end
 
-
   #Bowyer-Watson Algorithm
   def basic_triangulation
-    self.add_big_triangle
-
-    points.each do |point|
-      triangulate_point(point) unless point.temporary
+    in_big_triangle do
+      points.each do |point|
+        triangulate_point(point) unless point.temporary
+      end
     end
-
-    self.remove_big_triangle
 
     #TODO Change way of using holes so it may use any holes anywhere
     lines.delete_if{|line| line.midpoint.x > 8 and line.midpoint.x < 22 and line.midpoint.y > 10 and line.midpoint.y < 14}
@@ -383,10 +342,6 @@ class Framework
     end
   end
 
-  def ccw_points?(p1, p2, p3)
-    (p2.x - p1.x)*(p3.y - p1.y) - (p3.x - p1.x)*(p2.y - p1.y) > -0.001
-  end
-
   #list_of_points should be translate(wypukły) and counterclockwise
   def create_polygons(list_of_points, point)
     list_of_points.each_index do |i|
@@ -404,14 +359,9 @@ class Framework
     end
   end
 
+  def in_big_triangle
+    #ADDING TRIANGLE BIG ENOUGH TO CONTAIN ALL THE WORLD
 
-  def remove_big_triangle
-    lines.delete_if {|line| line.p1.temporary or line.p2.temporary}
-    polygons.delete_if{|polygon| polygon.p1.temporary or polygon.p2.temporary or polygon.p3.temporary}
-    points.delete_if {|pt| pt.temporary}
-  end
-
-  def add_big_triangle
     #find rectangle enclosing points
     max_x = points[0].x
     min_x = points[0].x
@@ -449,5 +399,13 @@ class Framework
     lines << Line.new(pt3, pt1)
 
     polygons << Polygon.new(pt1, pt2, pt3)
+
+
+    yield
+
+    #REMOVING THE BIG TRIANGLE
+    lines.delete_if {|line| line.p1.temporary or line.p2.temporary}
+    polygons.delete_if{|polygon| polygon.p1.temporary or polygon.p2.temporary or polygon.p3.temporary}
+    points.delete_if {|pt| pt.temporary}
   end
 end
