@@ -1,8 +1,8 @@
 class Line
   attr_accessor :p1, :p2
 
-  def initialize(p1, p2)
-    if p1.id > p2.id #whyyyyyy
+  def initialize(p1, p2, helper = false)
+    if helper or p1.id > p2.id #whyyyyyy, oh, god, whyyyy
       @p1 = p1
       @p2 = p2
     else

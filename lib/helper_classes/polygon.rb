@@ -22,6 +22,10 @@ class Polygon
       @p3 = p2
     end
 
+    @line_1 = Line.new(@p1, @p2, true)
+    @line_2 = Line.new(@p1, @p3, true)
+    @line_3 = Line.new(@p3, @p2, true)
+
     @cosine = smallest_angle_cos
     @energy = nil
     @deletion_goal = nil
@@ -33,18 +37,11 @@ class Polygon
 
   def stiff_matrix(stiff)
     @stiff_matrix ||= begin
-      matrix = StiffMatrix.new(stiff)
-
-      line = Line.new(@p1, @p2)
-      matrix.insert(line, [0, 1, 2, 3])
-
-      line = Line.new(@p1, @p3)
-      matrix.insert(line, [0, 1, 4, 5])
-
-      line = Line.new(@p3, @p2)
-      matrix.insert(line, [2, 3, 4, 5])
-
-      matrix
+      StiffMatrix.new(stiff).tap do |matrix|
+        matrix.insert(@line_1, [0, 1, 2, 3])
+        matrix.insert(@line_2, [0, 1, 4, 5])
+        matrix.insert(@line_3, [2, 3, 4, 5])
+      end
     end
   end
 
@@ -79,23 +76,7 @@ class Polygon
   end
 
   def mid_of_longest_side
-    side_1 = Math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
-    side_2 = Math.sqrt((p1.x - p3.x)**2 + (p1.y - p3.y)**2)
-    side_3 = Math.sqrt((p3.x - p2.x)**2 + (p3.y - p2.y)**2)
-
-    if side_1 > side_2
-      if side_1 > side_3
-        return Point.new(0.5 * (p1.x + p2.x), 0.5 * (p1.y + p2.y))
-      else
-        return Point.new(0.5 * (p3.x + p2.x), 0.5 * (p3.y + p2.y))
-      end
-    else
-      if side_2 > side_3
-        return Point.new(0.5 * (p3.x + p1.x), 0.5 * (p3.y + p1.y))
-      else
-        return Point.new(0.5 * (p3.x + p2.x), 0.5 * (p3.y + p2.y))
-      end
-    end
+    [@line_1, @line_2, @line_3].max_by{|line| line.length }.midpoint
   end
 
   def tension
