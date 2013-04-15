@@ -2,7 +2,7 @@ class Configuration
   attr_reader :stiff, :force, :energy_limit, :min_field, :max_field, :window_x, :window_y, :scale, :translate, :window
   attr_writer :window
 
-  def initialize(window = nil)
+  def initialize
     @stiff = 20.0
     @force = -7.5
 
