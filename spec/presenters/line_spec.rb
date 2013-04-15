@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Line do
+describe Line::Presenter do
   def point_1
     @point_1 ||= Point.new(0, 0).tap do |point|
       point.id = 2
@@ -23,7 +23,7 @@ describe Line do
 
   describe "draw" do
     it "passes correct params to window via #draw_line" do
-      line.draw
+      Line::Presenter.new(line).draw
 
       drawed_line.x1.should == 60.0
       drawed_line.y1.should == 540.0
