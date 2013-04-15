@@ -12,7 +12,7 @@ class Polygon
   def initialize(p1, p2, p3)
     #Initialized in such way that points are stored in counterclockwise order
 
-    if (p2.x - p1.x)*(p3.y - p1.y) - (p3.x - p1.x)*(p2.y - p1.y) > 0
+    if ccw_points?(p1, p2, p3)
       @p1 = p1
       @p2 = p2
       @p3 = p3
