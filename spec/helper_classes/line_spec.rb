@@ -43,6 +43,18 @@ describe Line do
     end
   end
 
+  describe 'cos' do
+    it 'returns cosine' do
+      line.cos.should == 0.19611613513818404
+    end
+  end
+
+  describe 'sin' do
+    it 'returns sine' do
+      line.sin.should == 0.9805806756909202
+    end
+  end
+
   describe 'inside_circle?' do
     it "returns true if lines midpoint is closer to point than to it's end" do
       line.inside_circle?(inside_point).should == true

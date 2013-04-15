@@ -15,6 +15,14 @@ class Line
     Line.new(midpoint, @p1).length > Line.new(midpoint, point).length
   end
 
+  def cos
+    @cos ||= (@p2.x - @p1.x) / length
+  end
+
+  def sin
+    @sin ||= (@p2.y - @p1.y) / length
+  end
+
   def midpoint
     @midpoint ||= Point.new(0.5 * (p1.x + p2.x), 0.5 * (p1.y + p2.y)).tap do |point|
       point.id = 0
@@ -22,7 +30,7 @@ class Line
   end
 
   def length
-    Math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
+    @length ||= Math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
   end
 
   def draw

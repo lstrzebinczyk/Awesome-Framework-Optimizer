@@ -31,6 +31,23 @@ class Polygon
     @circle = Circle.new(self)
   end
 
+  def stiff_matrix(stiff)
+    @stiff_matrix ||= begin
+      matrix = StiffMatrix.new(stiff)
+
+      line = Line.new(@p1, @p2)
+      matrix.insert(line, [0, 1, 2, 3])
+
+      line = Line.new(@p1, @p3)
+      matrix.insert(line, [0, 1, 4, 5])
+
+      line = Line.new(@p3, @p2)
+      matrix.insert(line, [2, 3, 4, 5])
+
+      matrix
+    end
+  end
+
   def smallest_angle_cos
     v12 = [p2.x - p1.x, p2.y - p1.y]
     v13 = [p3.x - p1.x, p3.y - p1.y]
@@ -94,7 +111,11 @@ class Polygon
   end
 
   def energy(stiff)
-    @energy ||= Energy.new(self, stiff).to_f
+    @energy ||= 0.5 * stiff_matrix(stiff).scalar(displacement)
+  end
+
+  def displacement
+    Vector.new([@p1.dx, @p1.dy, @p2.dx, @p2.dy, @p3.dx, @p3.dy])
   end
 
   private
