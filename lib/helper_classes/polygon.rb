@@ -1,5 +1,5 @@
 class Polygon
-  attr_accessor :p1, :p2, :p3, :cosine, :energy, :deletion_goal, :circle
+  attr_accessor :p1, :p2, :p3, :cosine, :energy, :deletion_goal, :circle, :midpoint, :field
 
   def draw_more_complicated(framework)
     Presenter.new(self, framework).draw_more_complicated
@@ -25,6 +25,9 @@ class Polygon
     @cosine = self.smallest_angle_cos
     @energy = nil
     @deletion_goal = nil
+    @midpoint = Point.new((p1.x + p2.x + p3.x)/3.0, (p1.y + p2.y + p3.y)/3.0)
+    @field = Field.new(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y).to_f
+
     @circle = Circle.new(self)
   end
 
@@ -76,25 +79,6 @@ class Polygon
         return Point.new(0.5 * (p3.x + p2.x), 0.5 * (p3.y + p2.y))
       end
     end
-  end
-
-  def midpoint
-    Point.new((p1.x + p2.x + p3.x)/3.0, (p1.y + p2.y + p3.y)/3.0)
-  end
-
-  def field
-    @field ||= 0.5 * (p1.x*p2.y + p2.x*p3.y + p3.x*p1.y - p3.x*p2.y - p1.x*p3.y - p2.x*p1.y).abs
-  end
-
-  def moved_field
-    p1_x = p1.x + p1.dx
-    p1_y = p1.y + p1.dy
-    p2_x = p2.x + p2.dx
-    p2_y = p2.y + p2.dy
-    p3_x = p3.x + p3.dx
-    p3_y = p3.y + p3.dy
-
-    0.5 * (p1_x*p2_y + p2_x*p3_y + p3_x*p1_y - p3_x*p2_y - p1_x*p3_y - p2_x*p1_y).abs
   end
 
   def tension
@@ -223,5 +207,11 @@ class Polygon
         sum += v1[i]*v2[i]
       end
     sum
+  end
+
+  private
+  
+  def moved_field
+    Field.new(p1.x + p1.dx, p1.y + p1.dy, p2.x + p2.dx, p2.y + p2.dy, p3.x + p3.dx, p3.y + p3.dy).to_f
   end
 end
