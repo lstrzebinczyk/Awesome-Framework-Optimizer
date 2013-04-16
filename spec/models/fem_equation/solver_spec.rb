@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe FemEquation::Solver do
   def expected_response
-    FemEquation::Vector[ 
+    FemEquation::Vector[[ 
         0.05194504676036222,
        -3.5983973870311146,
         0.0,
@@ -30,7 +30,7 @@ describe FemEquation::Solver do
        -0.04967796131010597,
        -7.577952491201208,
        -0.7658760861402577,
-       -4.784132658516079 ]
+       -4.784132658516079 ]]
   end
 
   describe 'solve' do

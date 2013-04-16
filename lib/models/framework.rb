@@ -57,7 +57,7 @@ class Framework
   end
 
   def delete_line?(p1, p2)
-    polygons.none?{|poly| poly.has_line?(point1, point2)}
+    polygons.none?{|poly| poly.has_line?(p1, p2)}
   end
 
   def delete_line(p1, p2)

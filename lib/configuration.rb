@@ -3,7 +3,7 @@ class Configuration
   attr_writer :window
 
   def initialize
-    @stiff = 20.0
+    @stiff = 20
     @force = -7.5
 
     @energy_limit = 0.05

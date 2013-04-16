@@ -13,16 +13,16 @@ class FemEquation
       apply_boundaries(@values, framework.points)
     end
 
-    def length
-      @values.length
-    end
-
-    def [](key1, key2)
-      @values[key1].each do |elem|
-        if elem[0] == key2
-          return elem[1]
+    def precondition_vector
+      Vector.float(@size).tap do |v|
+        (0...@size).each do |i|
+          v[i] = 1.0/self[i, i]
         end
       end
+    end
+
+    def length
+      @values.length
     end
 
     def product(vector)
@@ -38,6 +38,14 @@ class FemEquation
     end
 
     private
+
+    def [](key1, key2)
+      @values[key1].each do |elem|
+        if elem[0] == key2
+          return elem[1]
+        end
+      end
+    end
 
     def helper_product(lol_list, vector)
       sum = 0
