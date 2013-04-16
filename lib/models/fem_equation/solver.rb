@@ -31,9 +31,7 @@ class FemEquation
 
         answer_vector += alpha_val * p_vector
 
-        helper_vector = @stiff_matrix.product(p_vector)
-
-        current_residuum = last_residuum - alpha_val * helper_vector
+        current_residuum = last_residuum - alpha_val * @stiff_matrix.product(p_vector)
 
         break if current_residuum.max.abs < 0.001
 
@@ -55,7 +53,7 @@ class FemEquation
 
     def precondition_matrix
       @precondition_matrix ||= begin
-        NVector.float(@size).tap do |v|
+        Vector.float(@size).tap do |v|
           (0...@size).each do |i|
             v[i] = 1.0/@stiff_matrix[i, i]
           end
