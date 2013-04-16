@@ -2,6 +2,10 @@ class Framework
   attr_accessor :points, :lines, :polygons, :stiff, :constants
   attr_accessor :max_goal, :max_energy
 
+  def stiff_matrix
+    FemEquation::StiffMatrix.new(self)
+  end
+
   def config
     @configuration = Configuration.global
   end
@@ -118,7 +122,7 @@ class Framework
   #This method actually counts Fem thing and actualizes dx and dy
   def FEM_solve
     #creates and remembers fem equation
-    @fem = FemEquation.new(self)
+    @fem = FemEquation::Solver.new(self.stiff_matrix, self.force_vector)
 
     #solves fem equation
     @deltas = @fem.solve

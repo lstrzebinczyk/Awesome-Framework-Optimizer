@@ -3,15 +3,13 @@ class FemEquation
     def initialize(stiff_matrix, force)
       @stiff_matrix = stiff_matrix
       @force = Vector[force]
-
-      @size = @stiff_matrix.length
       @precondition_vector = stiff_matrix.precondition_vector
     end
 
     #This method actially solves system of linear equations
     #using conjugate gradient method
     def solve
-      answer_vector    = Vector.float(@size)
+      answer_vector    = Vector.float(@stiff_matrix.length)
       current_residuum = @force.clone
       current_z_vector = @force.clone.mul! @precondition_vector
       p_vector         = @force.clone.mul! @precondition_vector
