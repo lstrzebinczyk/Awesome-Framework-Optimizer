@@ -1,6 +1,6 @@
 class FemEquation
   def initialize(framework)
-    @stiff_matrix = StiffMatrix.new(framework).values
+    @stiff_matrix = StiffMatrix.new(framework)
     @force = framework.force_vector
   end
 

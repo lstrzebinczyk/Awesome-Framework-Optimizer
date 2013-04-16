@@ -13,7 +13,39 @@ class FemEquation
       apply_boundaries(@values, framework.points)
     end
 
+    def length
+      @values.length
+    end
+
+    def [](key1, key2)
+      @values[key1].each do |elem|
+        if elem[0] == key2
+          return elem[1]
+        end
+      end
+    end
+
+    def product(vector)
+      raise 'Incoming object has to be of class FemEquation::Vector' unless vector.is_a?(FemEquation::Vector)
+
+      returned_vector = Vector.float(length)
+
+      (0...length).each do |i|
+        returned_vector[i] = helper_product(@values[i], vector)
+      end
+
+      returned_vector
+    end
+
     private
+
+    def helper_product(lol_list, vector)
+      sum = 0
+        lol_list.each do |elem|
+          sum += elem[1] * vector[elem[0]]
+        end
+      sum
+    end
 
     #lol- list of lists (matrix of FEM coeffs)
     def insert_line(lol, line, stiff)

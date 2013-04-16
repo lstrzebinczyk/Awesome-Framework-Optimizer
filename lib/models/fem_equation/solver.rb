@@ -3,44 +3,35 @@ class FemEquation
     def initialize(stiff_matrix, force)
       @stiff_matrix = stiff_matrix
       @force = force
+
+      @size = @stiff_matrix.length
     end
 
     #This method actially solves system of linear equations
     #using conjugate gradient method
     def solve
-      l = @stiff_matrix.length
-      precondition_matrix = NVector.float(l)
-
-      (0...l).each do |i|
-        precondition_matrix[i] = 1.0 / middle(@stiff_matrix, i)
-      end
-
-      answer_vector = NVector.float(l)
-      current_residuum = NVector[@force]
-      current_z_vector = NVector[@force].mul! precondition_matrix
-      p_vector = NVector[@force].mul! precondition_matrix
+      answer_vector = Vector.float(@size)
+      current_residuum = Vector[@force]
+      current_z_vector = Vector[@force].mul! precondition_matrix
+      p_vector = Vector[@force].mul! precondition_matrix
 
       answer_vector.flatten!
       current_residuum.flatten!
       current_z_vector.flatten!
       p_vector.flatten!
 
-      iteration = 0
-
       while true
-        iteration += 1
-
         last_residuum = current_residuum.clone
         last_z_vector = current_z_vector.clone
 
-        alpha_val = pre_alpha(last_residuum, last_z_vector, p_vector, @stiff_matrix)
+        helper1 = last_residuum * last_z_vector
+        helper2 = @stiff_matrix.product(p_vector)
+        helper3 = p_vector * helper2
+        alpha_val = helper1 / helper3
 
         answer_vector += alpha_val * p_vector
 
-        helper_vector = NVector.float(l)
-        (0...l).each do |i|
-          helper_vector[i] = product(@stiff_matrix[i], p_vector)
-        end
+        helper_vector = @stiff_matrix.product(p_vector)
 
         current_residuum = last_residuum - alpha_val * helper_vector
 
@@ -62,31 +53,14 @@ class FemEquation
 
     private
 
-    def pre_alpha(r, z, pv, a)
-      helper1 = r * z
-      helper2 = NVector.float(pv.length)
-        (0...pv.length).each do |i|
-          helper2[i] = product(a[i], pv)
-        end
-      helper3 = pv * helper2
-
-      return helper1/helper3
-    end
-
-    def middle(lol, index)
-      lol[index].each do |elem|
-        if elem[0] == index
-          return elem[1]
+    def precondition_matrix
+      @precondition_matrix ||= begin
+        NVector.float(@size).tap do |v|
+          (0...@size).each do |i|
+            v[i] = 1.0/@stiff_matrix[i, i]
+          end
         end
       end
-    end
-
-    def product(lol_list, vector)
-      sum = 0
-        lol_list.each do |elem|
-          sum += elem[1] * vector[elem[0]]
-        end
-      sum
     end
   end
 end
