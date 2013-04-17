@@ -37,6 +37,21 @@ class Line
     @length ||= Math.sqrt((@p1.x - @p2.x)**2 + (@p1.y - @p2.y)**2)
   end
 
+  def stiff_matrix
+    @stiff_matrix ||= begin
+      cc = cos * cos / length
+      cs = cos * sin / length
+      ss = sin * sin / length
+
+      [ 
+        [ cc,  cs, -cc, -cs],
+        [ cs,  ss, -cs, -ss],
+        [-cc, -cs,  cc,  cs],
+        [-cs, -ss,  cs,  ss]
+      ]
+    end
+  end
+
   def draw
     Presenter.new(self).draw
   end

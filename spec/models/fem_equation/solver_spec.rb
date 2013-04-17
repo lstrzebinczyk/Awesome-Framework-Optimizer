@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe FemEquation::Solver do
   def expected_response
-    FemEquation::Vector[[ 
+    [ 
         0.05194504676036222,
        -3.5983973870311146,
         0.0,
@@ -30,7 +30,7 @@ describe FemEquation::Solver do
        -0.04967796131010597,
        -7.577952491201208,
        -0.7658760861402577,
-       -4.784132658516079 ]]
+       -4.784132658516079 ]
   end
 
   describe 'solve' do
@@ -42,7 +42,10 @@ describe FemEquation::Solver do
       stiff_matrix = FemEquation::StiffMatrix.new(framework)
       force = framework.force_vector
 
-      FemEquation::Solver.new(stiff_matrix, force).solve.should == expected_response
+      # FemEquation::Solver.new(stiff_matrix, force).solve.should == expected_response
+      FemEquation::Solver.new(stiff_matrix, force).solve.each_with_index do |elem, i|
+        (elem - expected_response[i]).abs.should < 0.0001
+      end
     end
   end
 end
