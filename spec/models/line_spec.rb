@@ -35,6 +35,19 @@ describe Line do
     end
   end
 
+  describe 'stiff_matrix' do
+    it 'counts and returns 4x4 stiff matrix' do
+      expected = [
+        [ 0.0037714641372727704,  0.018857320686363855, -0.0037714641372727704, -0.018857320686363855], 
+        [ 0.018857320686363855,   0.09428660343181927,  -0.018857320686363855,  -0.09428660343181927 ], 
+        [-0.0037714641372727704, -0.018857320686363855,  0.0037714641372727704,  0.018857320686363855], 
+        [-0.018857320686363855,  -0.09428660343181927,   0.018857320686363855,   0.09428660343181927 ]
+      ]
+
+      line.stiff_matrix.should == expected
+    end
+  end
+
   describe 'temporary?' do
     it 'returns false if points are not temporary' do
       line.temporary?.should == false
