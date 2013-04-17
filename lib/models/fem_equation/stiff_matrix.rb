@@ -1,6 +1,6 @@
 class FemEquation
   class StiffMatrix
-    attr_reader :values
+    attr_reader :values, :size
 
     def initialize(framework)
       @size = framework.points.size * 2
@@ -21,16 +21,12 @@ class FemEquation
       end
     end
 
-    def length
-      @values.length
-    end
-
     def product(vector)
       raise 'Incoming object has to be of class FemEquation::Vector' unless vector.is_a?(FemEquation::Vector)
 
-      returned_vector = Vector.float(length)
+      returned_vector = Vector.float(size)
 
-      (0...length).each do |i|
+      (0...size).each do |i|
         returned_vector[i] = helper_product(@values[i], vector)
       end
 

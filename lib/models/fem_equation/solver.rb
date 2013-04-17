@@ -9,7 +9,7 @@ class FemEquation
     #This method actially solves system of linear equations
     #using conjugate gradient method
     def solve
-      answer_vector    = Vector.float(@stiff_matrix.length)
+      answer_vector    = Vector.float(@stiff_matrix.size)
       current_residuum = @force.clone
       current_z_vector = @force.clone.mul! @precondition_vector
       p_vector         = @force.clone.mul! @precondition_vector
