@@ -100,6 +100,10 @@ class Framework
     self
   end
 
+  def in_forbidden_area?(point)
+    point.x > 8 and point.x <= 15 and point.y > 10 and point.y < 14
+  end
+
   def make_denser
     self.perform_triangulation
     self.reload
@@ -118,20 +122,15 @@ class Framework
           triangulate_point(point) unless point.temporary?
         end
       end
-
-      #TODO Change way of using holes so it may use any holes anywhere
-      lines.delete_if{|line| line.midpoint.x > 8 and line.midpoint.x < 22 and line.midpoint.y > 10 and line.midpoint.y < 14}
-      polygons.delete_if{|polygon| polygon.midpoint.x > 8 and polygon.midpoint.x < 22 and polygon.midpoint.y > 10 and polygon.midpoint.y < 14}
     else
       @new_points.each do |point|
         triangulate_point(point)
       end
-
       @new_points =  []
-
-      lines.delete_if{|line| line.midpoint.x > 8 and line.midpoint.x < 22 and line.midpoint.y > 10 and line.midpoint.y < 14}
-      polygons.delete_if{|polygon| polygon.midpoint.x > 8 and polygon.midpoint.x < 22 and polygon.midpoint.y > 10 and polygon.midpoint.y < 14}
     end
+    #TODO Change way of using holes so it may use any holes anywhere
+    lines.delete_if{|line| in_forbidden_area?(line.midpoint)}
+    polygons.delete_if{|polygon| in_forbidden_area?(polygon.midpoint)}
 
     #performs mesh refinement using ruppert algorith
     loop do
@@ -225,7 +224,7 @@ class Framework
       end
     end
 
-    if answer == true and point.x > 8 and point.x < 22 and point.y > 10 and point.y < 14
+    if answer == true and in_forbidden_area?(point)
       answer = false
     end
 
