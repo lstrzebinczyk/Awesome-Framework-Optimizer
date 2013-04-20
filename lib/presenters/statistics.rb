@@ -1,5 +1,5 @@
 class Statistics
-  class Presenter
+  class Presenter < Presenter
     def initialize(statistics)
       @statistics = statistics
     end
@@ -19,16 +19,11 @@ class Statistics
       write("Optimization         = #{@statistics.optimization}%",   600, 190)
 
       (1...(@statistics.goals.length-1)).each do |i|
-        draw_line_framework(40.0 + i/2.0, 20* @statistics.goals[i]/@statistics.goals.first, 40.5 + i / 2.0, 20* @statistics.goals[i+1]/@statistics.goals.first )
+        draw_line(40.0 + i/2.0, 20* @statistics.goals[i]/@statistics.goals.first, 40.5 + i / 2.0, 20* @statistics.goals[i+1]/@statistics.goals.first )
       end
     end
 
     private
-
-    def draw_line_framework(p1_x, p1_y, p2_x, p2_y)
-      configuration.window.draw_line(configuration.translate + p1_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p1_y * configuration.scale), 0xff000000, 
-                configuration.translate + p2_x * configuration.scale, configuration.window_y - 1.0 * (configuration.translate + p2_y * configuration.scale), 0xff000000)
-    end
 
     def write(text, x, y)
       font.draw(text, x, y, 1, factor_x = 1, factor_y = 1, color = 0xff000000, mode = :default)
@@ -36,10 +31,6 @@ class Statistics
 
     def font
       @font ||= Gosu::Font.new(configuration.window, "Times New Roman", 24)
-    end
-
-    def configuration
-      @config ||= Configuration.global
     end
   end
 end

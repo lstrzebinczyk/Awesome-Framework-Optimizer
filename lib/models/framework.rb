@@ -29,9 +29,7 @@ class Framework
     @new_points += dividing_polygon.dividing_points
     @points += @new_points
 
-    @points.each_index do |i|
-      @points[i].id = i
-    end
+    reidentify_points!
 
     return dividing_polygon.energy(self.stiff) > self.constants.energy_limit
   end
@@ -39,7 +37,8 @@ class Framework
   def optimize
     poly = polygons.max_by{|polygon| polygon.deletion_goal(self.stiff)}
     remove_polygon(poly)
-    self.reload
+    
+    reidentify_points!
 
     deltas = FemEquation::Solver.new(self.stiff_matrix, self.force_vector).solve
     update_points_with_deltas(deltas)
@@ -97,16 +96,13 @@ class Framework
     @x_blocks = [Boundary.new(Point.new(10, 0), Point.new(20, 0)), Boundary.new(Point.new(15, 0), Point.new(15, 30))]
     @y_blocks = [Boundary.new(Point.new(10, 0), Point.new(20, 0))]
 
-    self.reload
+    reidentify_points!
     
     self
   end
 
-  #resets data in points
-  def reload
-    points.each_index do |i|
-      points[i].id = i
-    end
+  def reidentify_points!
+    points.each_index {|i| points[i].id = i }
   end
 
   def points_to_block_ids
@@ -131,7 +127,8 @@ class Framework
 
   def make_denser
     self.perform_triangulation
-    self.reload
+
+    reidentify_points!
 
     deltas = FemEquation::Solver.new(self.stiff_matrix, self.force_vector).solve
     update_points_with_deltas(deltas)
