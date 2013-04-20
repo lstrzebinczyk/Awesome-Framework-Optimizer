@@ -37,7 +37,7 @@ class Framework
   def optimize
     poly = polygons.max_by{|polygon| polygon.deletion_goal(self.stiff)}
     remove_polygon(poly)
-    
+
     reidentify_points!
 
     deltas = FemEquation::Solver.new(self.stiff_matrix, self.force_vector).solve
@@ -206,20 +206,7 @@ class Framework
   #TODO
   #Poprawić w oparciu o proste brzegowe
   def includes_point?(point)
-    answer = false
-
-    polygons.each do |polygon|
-      if polygon.include?(point)
-        answer = true
-        break
-      end
-    end
-
-    if answer == true and in_forbidden_area?(point)
-      answer = false
-    end
-
-    return answer
+    polygons.any?{|poly| poly.include?(point) } and not in_forbidden_area?(point)
   end
 
   def triangulate_point(point)
