@@ -11,7 +11,7 @@ module Task
       @statistics.update!
 
       unless keep_working
-        @framework.perform_triangulation
+        @framework.mesh.perform_triangulation
         @statistics.goals << @framework.goal
 
         return Optimization.new(@framework, @statistics)

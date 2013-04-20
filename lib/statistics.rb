@@ -32,7 +32,7 @@ class Statistics
   end
 
   def points_size
-    @framework.points.size
+    @framework.points_size
   end
 
   def max_energy

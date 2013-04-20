@@ -2,13 +2,13 @@ class FemEquation
   class StiffMatrix
     attr_reader :values, :size
 
-    def initialize(framework)
-      @framework = framework
-      @size = framework.points.size * 2
+    def initialize(mesh)
+      @mesh = mesh
+      @size = mesh.points.size * 2
       @values = Array.new(@size){[]}
 
-      framework.lines.each do |line|
-        insert_line(@values, line, framework.stiff)
+      mesh.lines.each do |line|
+        insert_line(@values, line, config.stiff)
       end
     end
 
@@ -40,6 +40,10 @@ class FemEquation
 
     private
 
+    def config
+      Configuration.global
+    end
+
     def [](key1, key2)
       @values[key1].each do |elem|
         if elem[0] == key2
@@ -58,10 +62,10 @@ class FemEquation
 
     #lol- list of lists (matrix of FEM coeffs)
     def insert_line(lol, line, stiff)
-      x1 = @framework.index_of(line.p1) * 2
-      x2 = @framework.index_of(line.p1) * 2 + 1
-      x3 = @framework.index_of(line.p2) * 2
-      x4 = @framework.index_of(line.p2) * 2 + 1
+      x1 = @mesh.index_of(line.p1) * 2
+      x2 = @mesh.index_of(line.p1) * 2 + 1
+      x3 = @mesh.index_of(line.p2) * 2
+      x4 = @mesh.index_of(line.p2) * 2 + 1
 
       add_to_line(lol[x1], x1, stiff * line.stiff_matrix[0][0])
       add_to_line(lol[x1], x2, stiff * line.stiff_matrix[0][1])

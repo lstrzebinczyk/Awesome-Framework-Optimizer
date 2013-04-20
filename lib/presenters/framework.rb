@@ -21,17 +21,17 @@ class Framework
     private
 
     def draw_lines!
-      @framework.lines.each{|line| line.draw }
+      @framework.mesh.lines.each{|line| line.draw }
     end
 
     def draw_more_complicated_polygons!
-      @framework.polygons.each do |poly|
+      @framework.mesh.polygons.each do |poly|
         poly.draw_more_complicated
       end
     end
 
     def drow_less_complicated_polygons!
-      @framework.polygons.each do |poly|
+      @framework.mesh.polygons.each do |poly|
         poly.draw_less_complicated
       end
     end

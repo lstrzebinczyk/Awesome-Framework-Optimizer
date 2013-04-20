@@ -2,6 +2,7 @@ require 'gosu'
 require 'narray'
 
 require_relative 'models/boundary'
+require_relative 'models/mesh'
 require_relative 'models/line'
 require_relative 'models/point'
 require_relative 'models/polygon'

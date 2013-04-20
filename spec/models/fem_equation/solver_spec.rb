@@ -36,9 +36,9 @@ describe FemEquation::Solver do
   describe 'solve' do
     it 'does a marvellous job at solving the equation' do #This test is bad and I feel bad
       framework = Framework.new
-      framework.perform_triangulation
+      framework.mesh.perform_triangulation
 
-      stiff_matrix = FemEquation::StiffMatrix.new(framework)
+      stiff_matrix = FemEquation::StiffMatrix.new(framework.mesh)
       stiff_matrix.block_ids(framework.points_to_block_ids)
       force = framework.force_vector
 
