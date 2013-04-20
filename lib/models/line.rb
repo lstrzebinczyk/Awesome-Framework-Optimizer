@@ -2,13 +2,12 @@ class Line
   attr_accessor :p1, :p2
 
   def initialize(p1, p2, helper = false)
-    if helper or p1.id > p2.id #whyyyyyy, oh, god, whyyyy
-      @p1 = p1
-      @p2 = p2
-    else
-      @p1 = p2
-      @p2 = p1
-    end
+    @p1 = p1
+    @p2 = p2
+  end
+
+  def ==(other)
+    (@p1 == other.p1 and @p2 == other.p2) or (@p2 == other.p2 and @p1 == other.p1)
   end
 
   def temporary?
@@ -28,9 +27,7 @@ class Line
   end
 
   def midpoint
-    @midpoint ||= (@p1 + @p2).tap do |point|
-      point.id = 0
-    end
+    @midpoint ||= (@p1 + @p2)
   end
 
   def length

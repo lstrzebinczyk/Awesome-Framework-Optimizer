@@ -65,7 +65,7 @@ class Framework
   end
 
   def delete_line(p1, p2)
-    lines.delete_if{|line| (line.p1 == p1 and line.p2 == p2) or (line.p1 == p2 and line.p2 == p1)}
+    lines.delete_if{|line| line == Line.new(p1, p2)}
   end
 
   def delete_point(p1)
@@ -203,27 +203,15 @@ class Framework
     polygons.map(&:field).inject(:+)
   end
 
-  #TODO
-  #Poprawić w oparciu o proste brzegowe
   def includes_point?(point)
     polygons.any?{|poly| poly.include?(point) } and not in_forbidden_area?(point)
   end
 
   def triangulate_point(point)
-    list_of_polygons = find_all_polygons_including(point)
+    list_of_polygons = polygons.find_all{|poly| poly.circle.include?(point) }
     list_of_points = delete_polygons(list_of_polygons)
     ccw_sort(list_of_points, point)
     create_polygons(list_of_points, point)
-  end
-
-  def find_all_polygons_including(point)
-    list_of_polygons = []
-
-    polygons.each do |polygon|
-      list_of_polygons << polygon if polygon.circle.include?(point)
-    end
-
-    list_of_polygons
   end
 
   def delete_polygons(list_of_polygons)
@@ -239,18 +227,14 @@ class Framework
 
     list_of_lines_to_delete = []
     list_of_polygons.each do |polygon|
-      list_of_lines_to_delete << [polygon.p1, polygon.p2]
-      list_of_lines_to_delete << [polygon.p2, polygon.p3]
-      list_of_lines_to_delete << [polygon.p3, polygon.p1]
-    end
-
-    list_of_lines_to_delete.each do |pair|
-      pair[0], pair[1] = pair[1], pair[0] if pair[0].id < pair[1].id
+      list_of_lines_to_delete << polygon.line_1
+      list_of_lines_to_delete << polygon.line_2
+      list_of_lines_to_delete << polygon.line_3
     end
 
     list_of_lines_to_delete.uniq!
 
-    lines.delete_if {|elem| list_of_lines_to_delete.include?([elem.p1, elem.p2]) }
+    lines.delete_if {|elem| list_of_lines_to_delete.include?(elem) }
     polygons.delete_if {|elem| list_of_polygons.include?(elem)}
 
     return list_of_points
@@ -315,9 +299,7 @@ class Framework
     points << pt2
     points << pt3
 
-    points.each_index do |i|
-      points[i].id = i
-    end
+    reidentify_points!
 
     lines << Line.new(pt1, pt2)
     lines << Line.new(pt2, pt3)

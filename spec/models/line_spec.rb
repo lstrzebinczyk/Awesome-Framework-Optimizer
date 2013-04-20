@@ -2,21 +2,15 @@ require 'spec_helper'
 
 describe Line do
   def point_1
-    @point_1 ||= Point.new(0, 0).tap do |point|
-      point.id = 2
-    end
+    @point_1 ||= Point.new(0, 0)
   end
 
   def point_2
-    @point_2 ||= Point.new(2, 10).tap do |point|
-      point.id = 1
-    end
+    @point_2 ||= Point.new(2, 10)
   end
 
   def temporary_point
-    Point.new(0, 0, true).tap do |point|
-      point.id = 3
-    end
+    Point.new(0, 0, true)
   end
 
   def line
@@ -24,15 +18,11 @@ describe Line do
   end
 
   def inside_point
-    Point.new(0, 4).tap do |point|
-      point.id = 3
-    end
+    Point.new(0, 4)
   end
 
   def outside_point
-    Point.new(-1, 0).tap do |point|
-      point.id = 3
-    end
+    Point.new(-1, 0)
   end
 
   describe 'stiff_matrix' do
@@ -65,12 +55,6 @@ describe Line do
       line.p1.should == point_1
       line.p2.should == point_2
     end
-
-    it "sets points in reversed order if first point has lower id" do
-      line = Line.new(point_2, point_1)
-      line.p1.should == point_1
-      line.p2.should == point_2
-    end
   end
 
   describe 'cos' do
@@ -99,7 +83,6 @@ describe Line do
     it 'returns point between lines edges' do
       line.midpoint.x.should == 1
       line.midpoint.y.should == 5
-      line.midpoint.id.should == 0
     end
   end
 

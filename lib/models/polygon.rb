@@ -1,5 +1,5 @@
 class Polygon
-  attr_accessor :p1, :p2, :p3, :cosine, :energy, :deletion_goal, :circle, :midpoint, :field
+  attr_accessor :p1, :p2, :p3, :cosine, :energy, :deletion_goal, :circle, :midpoint, :field, :line_1, :line_2, :line_3
 
   def draw_more_complicated
     Presenter.new(self).draw_more_complicated
