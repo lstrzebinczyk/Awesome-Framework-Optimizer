@@ -92,7 +92,7 @@ class Polygon
   end
 
   def deletion_goal(stiff)
-    @deletion_goal ||= @field / (1 + energy(stiff))
+    @field / (1 + energy(stiff))
   end
 
   def good_for_refining?(max_cosine, min_field, max_field)
@@ -100,7 +100,7 @@ class Polygon
   end
 
   def energy(stiff)
-    @energy ||= 0.5 * stiff_matrix(stiff).scalar(displacement)
+    0.5 * stiff_matrix(stiff).scalar(displacement)
   end
 
   def displacement

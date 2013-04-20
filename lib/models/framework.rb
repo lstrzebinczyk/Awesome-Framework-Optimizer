@@ -28,6 +28,7 @@ class Framework
 
   def select_new_points
     dividing_polygon = polygons.max_by{|poly| poly.energy(self.stiff)}
+    @max_energy = dividing_polygon.energy(self.stiff)
     @new_points += dividing_polygon.dividing_points
     @points += @new_points
 
@@ -40,6 +41,7 @@ class Framework
 
   def optimize
     poly = polygons.max_by{|polygon| polygon.deletion_goal(self.stiff)}
+    @max_goal = poly.deletion_goal(self.stiff)
     remove_polygon(poly)
     self.reload
 
@@ -94,8 +96,8 @@ class Framework
     @stiff = config.stiff
     @constants = config
     @new_points = []
-    @max_goal = 0
-    @max_energy = 0
+    @max_goal = 1000000
+    # @max_energy = 0
 
     self.reload
     
@@ -109,7 +111,6 @@ class Framework
     deltas = FemEquation::Solver.new(self.stiff_matrix, self.force_vector).solve
     update_points_with_deltas(deltas)
 
-    self.count_field_and_energy
     select_new_points
   end
 
@@ -201,18 +202,6 @@ class Framework
     points_to_x_block.each do |pt|
       # puts "#{pt.x} + #{pt.y}"
       pt.set_block_x
-    end
-  end
-
-  def count_field_and_energy
-    @max_goal = 0
-    @max_energy = 0
-
-    polygons.each do |poly|
-      poly.deletion_goal = nil
-      poly.energy = nil
-      @max_goal = poly.deletion_goal(self.stiff) if poly.deletion_goal(self.stiff) > @max_goal
-      @max_energy = poly.energy(self.stiff) if poly.energy(self.stiff) > @max_energy
     end
   end
             
