@@ -25,6 +25,13 @@ describe Point do
     point.block_y.should == false
   end
 
+  describe 'angle' do
+    it 'returns angle between points and x axis' do
+      Point.new(0, 0).angle(Point.new(1, 1)).should == 0.7853981633974484
+      Point.new(0, 0).angle(Point.new(-1, 1)).should == 5.497787143782138
+    end
+  end
+
   describe 'temporary?' do
     it 'returns false for regular points' do
       Point.new(0, 0).temporary?.should == false

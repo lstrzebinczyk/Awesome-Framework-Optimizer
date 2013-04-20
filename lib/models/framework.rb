@@ -314,22 +314,11 @@ class Framework
   #counterclockwise sort
   def ccw_sort(list_of_points, point)
     begin
-      list_of_points.sort_by! {|pt| angle(pt, point)}
+      list_of_points.sort_by! {|pt| pt.angle(point)}
     rescue Exception => e
       puts e.message
       puts "[ERROR] Error in ccw sort"
       puts "[ERROR] #{list_of_points}"
-    end
-  end
-
-  #returns angle between vector |p2 p1| and x axis
-  def angle(p1, p2)
-    l = Math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
-
-    if p2.x >= p1.x
-      return Math.acos((p2.y - p1.y)/l)
-    else
-      return Math::PI + Math.acos((p1.y - p2.y)/l)
     end
   end
 

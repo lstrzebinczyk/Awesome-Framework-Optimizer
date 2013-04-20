@@ -22,6 +22,17 @@ class Point
     Point.new(0.5 * (@x + other.x), 0.5 * (@y + other.y))
   end
 
+  #returns angle between vector |self other| and x axis
+  def angle(other)
+    l = Math.sqrt((@x - other.x)**2 + (@y - other.y)**2)
+
+    if other.x >= @x
+      return Math.acos((other.y - @y)/l)
+    else
+      return Math::PI + Math.acos((@y - other.y)/l)
+    end
+  end
+
   def moved_x
     @x + @dx
   end
