@@ -42,7 +42,10 @@ class Framework
     poly = polygons.max_by{|polygon| polygon.deletion_goal(self.stiff)}
     remove_polygon(poly)
     self.reload
-    self.FEM_solve
+
+    deltas = FemEquation::Solver.new(self.stiff_matrix, self.force_vector).solve
+    update_points_with_deltas(deltas)
+
     return self.goal
   end
 
@@ -102,7 +105,10 @@ class Framework
   def make_denser
     self.perform_triangulation
     self.reload
-    self.FEM_solve
+
+    deltas = FemEquation::Solver.new(self.stiff_matrix, self.force_vector).solve
+    update_points_with_deltas(deltas)
+
     self.count_field_and_energy
     select_new_points
   end
@@ -119,17 +125,9 @@ class Framework
     ruppert_refinement
   end
 
-  #This method actually counts Fem thing and actualizes dx and dy
-  def FEM_solve
-    #creates and remembers fem equation
-    @fem = FemEquation::Solver.new(self.stiff_matrix, self.force_vector)
-
-    #solves fem equation
-    @deltas = @fem.solve
-
-    #inserts fem result into mesh displacement
+  def update_points_with_deltas(deltas)
     points.each_with_index do |point, i|
-      point.change_delta(@deltas[2 * i], @deltas[2 * i + 1])
+      point.change_delta(deltas[2 * i], deltas[2 * i + 1])
     end
   end
 
