@@ -1,5 +1,5 @@
 class Point
-  attr_accessor :id, :x, :y, :dx, :dy, :fx, :fy, :block_x, :block_y
+  attr_accessor :id, :x, :y, :dx, :dy, :block_x, :block_y
 
   def initialize(x, y, temporary = false)
     @id = nil
@@ -7,8 +7,6 @@ class Point
     @y = y
     @dx = 0
     @dy = 0
-    @fx = 0
-    @fy = 0
     @block_x = false
     @block_y = false
     @temporary = temporary
@@ -44,8 +42,6 @@ class Point
   def reset
     @dx = 0
     @dy = 0
-    @fx = 0
-    @fy = 0
     @block_x = false
     @block_y = false
   end
@@ -57,11 +53,6 @@ class Point
 
   def set_block_x
     @block_x = true
-  end
-
-  def force(fx, fy)
-    @fx = fx
-    @fy = fy
   end
 
   def change_delta(new_dx, new_dy)

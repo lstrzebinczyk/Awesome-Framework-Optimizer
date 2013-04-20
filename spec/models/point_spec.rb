@@ -5,8 +5,6 @@ describe Point do
     Point.new(1, 1).tap do |point|
       point.dx = 1
       point.dy = 1
-      point.fx = 1
-      point.fy = 1
       point.block_x = true
       point.block_y = true
     end
@@ -19,8 +17,6 @@ describe Point do
     point.y.should == 2
     point.dx.should == 0
     point.dy.should == 0
-    point.fx.should == 0
-    point.fy.should == 0
     point.block_x.should == false
     point.block_y.should == false
   end
@@ -68,8 +64,6 @@ describe Point do
       point.reset
       point.dx.should == 0
       point.dy.should == 0
-      point.fx.should == 0
-      point.fy.should == 0
       point.block_x.should == false
       point.block_y.should == false
     end
@@ -90,15 +84,6 @@ describe Point do
       point.set_block_x
       point.block_x.should == true
       point.block_y.should == false
-    end
-  end
-
-  describe 'force' do
-    it 'sets @fx and @fy to provided data' do
-      point = Point.new(0, 0)
-      point.force(1, 1)
-      point.fx.should == 1
-      point.fy.should == 1
     end
   end
 

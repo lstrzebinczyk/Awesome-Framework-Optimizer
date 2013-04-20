@@ -21,10 +21,6 @@ class Framework
     Presenter.new(self).draw_status_2
   end
 
-  def force_vector
-    points.map{|point| [point.fx, point.fy]}.flatten
-  end
-
   def select_new_points
     dividing_polygon = polygons.max_by{|poly| poly.energy(self.stiff)}
     @max_energy = dividing_polygon.energy(self.stiff)
@@ -95,9 +91,16 @@ class Framework
     @constants = config
     @new_points = []
 
+    @force = Force.new(Point.new(10, 30), Point.new(15, 30), @constants.force)
+
     self.reload
     
     self
+  end
+
+  def force_vector
+    affected_points_count = points.count{|pt| @force.include?(pt) }
+    points.map{|pt| @force.include?(pt) ? [0, @force.value/affected_points_count] : [0, 0] }.flatten
   end
 
   def in_forbidden_area?(point)
@@ -172,22 +175,14 @@ class Framework
   #resets data in points
   def reload
     #reset force put to points
-    points_to_input_force = []
     points_to_block = []
     points_to_x_block = []
 
     points.each_index do |i|
       points[i].reset
       points[i].id = i
-      points_to_input_force << points[i] if points[i].y == 30 and points[i].x >= 10 and points[i].x <= 20
       points_to_block << points[i] if points[i].y == 0 and points[i].x >= 10 and points[i].x <= 20
       points_to_x_block << points[i] if points[i].x == 15
-    end
-
-    force = constants.force / points_to_input_force.length
-
-    points_to_input_force.each do |pt|
-      pt.fy = force
     end
 
     points_to_block.each do |pt|
