@@ -26,13 +26,13 @@ class Framework
 
     def draw_more_complicated_polygons!
       @framework.polygons.each do |poly|
-        poly.draw_more_complicated(@framework)
+        poly.draw_more_complicated
       end
     end
 
     def drow_less_complicated_polygons!
       @framework.polygons.each do |poly|
-        poly.draw_less_complicated(@framework)
+        poly.draw_less_complicated
       end
     end
   end

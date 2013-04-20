@@ -1,12 +1,12 @@
 class Polygon
   attr_accessor :p1, :p2, :p3, :cosine, :energy, :deletion_goal, :circle, :midpoint, :field
 
-  def draw_more_complicated(framework)
-    Presenter.new(self, framework).draw_more_complicated
+  def draw_more_complicated
+    Presenter.new(self).draw_more_complicated
   end
 
-  def draw_less_complicated(framework)
-    Presenter.new(self, framework).draw_less_complicated
+  def draw_less_complicated
+    Presenter.new(self).draw_less_complicated
   end
 
   def initialize(p1, p2, p3)

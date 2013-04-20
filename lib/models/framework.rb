@@ -1,6 +1,5 @@
 class Framework
-  attr_accessor :points, :lines, :polygons, :stiff, :constants
-  attr_accessor :max_goal, :max_energy
+  attr_accessor :points, :lines, :polygons, :stiff, :constants, :max_energy
 
   def stiff_matrix
     FemEquation::StiffMatrix.new(self)
@@ -41,7 +40,6 @@ class Framework
 
   def optimize
     poly = polygons.max_by{|polygon| polygon.deletion_goal(self.stiff)}
-    @max_goal = poly.deletion_goal(self.stiff)
     remove_polygon(poly)
     self.reload
 
@@ -96,8 +94,6 @@ class Framework
     @stiff = config.stiff
     @constants = config
     @new_points = []
-    @max_goal = 1000000
-    # @max_energy = 0
 
     self.reload
     
