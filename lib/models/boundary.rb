@@ -1,7 +1,7 @@
-class Force
+class Boundary
   attr_reader :value
 
-  def initialize(p1, p2, value)
+  def initialize(p1, p2, value = nil)
     @p1 = p1
     @p2 = p2
     @value = value

@@ -2,7 +2,9 @@ class Framework
   attr_accessor :points, :lines, :polygons, :stiff, :constants, :max_energy
 
   def stiff_matrix
-    FemEquation::StiffMatrix.new(self)
+    FemEquation::StiffMatrix.new(self).tap do |matrix|
+      matrix.block_ids(points_to_block_ids)
+    end
   end
 
   def config
@@ -91,11 +93,32 @@ class Framework
     @constants = config
     @new_points = []
 
-    @force = Force.new(Point.new(10, 30), Point.new(15, 30), @constants.force)
+    @force = Boundary.new(Point.new(10, 30), Point.new(15, 30), @constants.force)
+    @x_blocks = [Boundary.new(Point.new(10, 0), Point.new(20, 0)), Boundary.new(Point.new(15, 0), Point.new(15, 30))]
+    @y_blocks = [Boundary.new(Point.new(10, 0), Point.new(20, 0))]
 
     self.reload
     
     self
+  end
+
+  #resets data in points
+  def reload
+    points.each_index do |i|
+      points[i].reset
+      points[i].id = i
+    end
+  end
+
+  def points_to_block_ids
+    ids = []
+
+    points.each do |point|
+      ids << point.id * 2     if @x_blocks.any?{|boundary| boundary.include?(point) }
+      ids << point.id * 2 + 1 if @y_blocks.any?{|boundary| boundary.include?(point) }
+    end
+
+    ids
   end
 
   def force_vector
@@ -169,29 +192,6 @@ class Framework
   def update_points_with_deltas(deltas)
     points.each_with_index do |point, i|
       point.change_delta(deltas[2 * i], deltas[2 * i + 1])
-    end
-  end
-
-  #resets data in points
-  def reload
-    #reset force put to points
-    points_to_block = []
-    points_to_x_block = []
-
-    points.each_index do |i|
-      points[i].reset
-      points[i].id = i
-      points_to_block << points[i] if points[i].y == 0 and points[i].x >= 10 and points[i].x <= 20
-      points_to_x_block << points[i] if points[i].x == 15
-    end
-
-    points_to_block.each do |pt|
-      pt.block
-    end
-
-    points_to_x_block.each do |pt|
-      # puts "#{pt.x} + #{pt.y}"
-      pt.set_block_x
     end
   end
             

@@ -40,6 +40,7 @@ describe FemEquation::Solver do
       framework.reload
 
       stiff_matrix = FemEquation::StiffMatrix.new(framework)
+      stiff_matrix.block_ids(framework.points_to_block_ids)
       force = framework.force_vector
 
       # FemEquation::Solver.new(stiff_matrix, force).solve.should == expected_response

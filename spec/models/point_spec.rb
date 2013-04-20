@@ -5,8 +5,6 @@ describe Point do
     Point.new(1, 1).tap do |point|
       point.dx = 1
       point.dy = 1
-      point.block_x = true
-      point.block_y = true
     end
   end
 
@@ -17,8 +15,6 @@ describe Point do
     point.y.should == 2
     point.dx.should == 0
     point.dy.should == 0
-    point.block_x.should == false
-    point.block_y.should == false
   end
 
   describe 'angle' do
@@ -59,31 +55,11 @@ describe Point do
   end
 
   describe 'reset' do
-    it 'sets @dx, @dy, @fx, @fy to 0 and @block_x, @block_y to false' do
+    it 'sets @dx, @dy, @fx, @fy to 0' do
       point = nonempty_point
       point.reset
       point.dx.should == 0
       point.dy.should == 0
-      point.block_x.should == false
-      point.block_y.should == false
-    end
-  end
-
-  describe 'block' do
-    it 'sets @block_x and @block_y to true' do
-      point = Point.new(0, 0)
-      point.block
-      point.block_x.should == true
-      point.block_y.should == true
-    end
-  end
-
-  describe 'set_block_x' do
-    it 'sets @block_x to true' do
-      point = Point.new(0, 0)
-      point.set_block_x
-      point.block_x.should == true
-      point.block_y.should == false
     end
   end
 

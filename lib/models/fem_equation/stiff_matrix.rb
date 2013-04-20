@@ -9,8 +9,12 @@ class FemEquation
       framework.lines.each do |line|
         insert_line(@values, line, framework.stiff)
       end
+    end
 
-      apply_boundaries(@values, framework.points)
+    def block_ids(ids)
+      ids.each do |id|
+        @values[id] = [[id, 1000000]]
+      end
     end
 
     def precondition_vector
@@ -95,27 +99,6 @@ class FemEquation
       end
 
       line.sort!
-    end
-
-    def apply_boundaries(matrix, points)
-      bounds = []
-      points.each do |point|
-        bounds << point.id*2 if point.block_x
-        bounds << point.id*2 +1 if point.block_y
-      end
-
-      bounds.each do |num|
-        matrix[num] = [[num, 1]]
-      end
-
-      matrix.each_with_index do |row, i|
-        unless bounds.include?(i)
-          row.delete_if { |pair| bounds.include?(pair[0]) or pair[1].abs < 0.0001}
-        end
-      end
-
-      #TODO Poprawić
-      matrix.delete_if{|elem| elem == []}
     end
   end
 end
