@@ -1,8 +1,7 @@
 class Point
-  attr_accessor :id, :x, :y, :dx, :dy
+  attr_accessor :x, :y, :dx, :dy
 
   def initialize(x, y, temporary = false)
-    @id = nil
     @x = x
     @y = y
     @dx = 0

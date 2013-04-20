@@ -3,6 +3,7 @@ class FemEquation
     attr_reader :values, :size
 
     def initialize(framework)
+      @framework = framework
       @size = framework.points.size * 2
       @values = Array.new(@size){[]}
 
@@ -57,10 +58,10 @@ class FemEquation
 
     #lol- list of lists (matrix of FEM coeffs)
     def insert_line(lol, line, stiff)
-      x1 = line.p1.id * 2
-      x2 = line.p1.id * 2 + 1
-      x3 = line.p2.id * 2
-      x4 = line.p2.id * 2 + 1
+      x1 = @framework.index_of(line.p1) * 2
+      x2 = @framework.index_of(line.p1) * 2 + 1
+      x3 = @framework.index_of(line.p2) * 2
+      x4 = @framework.index_of(line.p2) * 2 + 1
 
       add_to_line(lol[x1], x1, stiff * line.stiff_matrix[0][0])
       add_to_line(lol[x1], x2, stiff * line.stiff_matrix[0][1])

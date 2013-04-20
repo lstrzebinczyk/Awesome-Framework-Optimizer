@@ -10,7 +10,6 @@ describe Point do
 
   it "initializes with 2 numbers, defaults temporary to false" do
     point = Point.new(1, 2)
-    point.id.should == nil
     point.x.should == 1
     point.y.should == 2
     point.dx.should == 0

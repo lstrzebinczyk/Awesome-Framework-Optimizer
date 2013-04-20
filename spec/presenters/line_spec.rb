@@ -2,15 +2,11 @@ require 'spec_helper'
 
 describe Line::Presenter do
   def point_1
-    @point_1 ||= Point.new(0, 0).tap do |point|
-      point.id = 2
-    end
+    @point_1 ||= Point.new(0, 0)
   end
 
   def point_2
-    @point_2 ||= Point.new(2, 10).tap do |point|
-      point.id = 1
-    end
+    @point_2 ||= Point.new(2, 10)
   end
 
   def line

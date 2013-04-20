@@ -23,13 +23,15 @@ class Framework
     Presenter.new(self).draw_status_2
   end
 
+  def index_of(point)
+    points.index(point)
+  end
+
   def select_new_points
     dividing_polygon = polygons.max_by{|poly| poly.energy(self.stiff)}
     @max_energy = dividing_polygon.energy(self.stiff)
     @new_points += dividing_polygon.dividing_points
     @points += @new_points
-
-    reidentify_points!
 
     return dividing_polygon.energy(self.stiff) > self.constants.energy_limit
   end
@@ -37,8 +39,6 @@ class Framework
   def optimize
     poly = polygons.max_by{|polygon| polygon.deletion_goal(self.stiff)}
     remove_polygon(poly)
-
-    reidentify_points!
 
     deltas = FemEquation::Solver.new(self.stiff_matrix, self.force_vector).solve
     update_points_with_deltas(deltas)
@@ -95,22 +95,16 @@ class Framework
     @force = Boundary.new(Point.new(10, 30), Point.new(15, 30), @constants.force)
     @x_blocks = [Boundary.new(Point.new(10, 0), Point.new(20, 0)), Boundary.new(Point.new(15, 0), Point.new(15, 30))]
     @y_blocks = [Boundary.new(Point.new(10, 0), Point.new(20, 0))]
-
-    reidentify_points!
     
     self
-  end
-
-  def reidentify_points!
-    points.each_index {|i| points[i].id = i }
   end
 
   def points_to_block_ids
     ids = []
 
     points.each do |point|
-      ids << point.id * 2     if @x_blocks.any?{|boundary| boundary.include?(point) }
-      ids << point.id * 2 + 1 if @y_blocks.any?{|boundary| boundary.include?(point) }
+      ids << index_of(point) * 2     if @x_blocks.any?{|boundary| boundary.include?(point) }
+      ids << index_of(point) * 2 + 1 if @y_blocks.any?{|boundary| boundary.include?(point) }
     end
 
     ids
@@ -127,8 +121,6 @@ class Framework
 
   def make_denser
     self.perform_triangulation
-
-    reidentify_points!
 
     deltas = FemEquation::Solver.new(self.stiff_matrix, self.force_vector).solve
     update_points_with_deltas(deltas)
@@ -175,7 +167,6 @@ class Framework
           end
 
           unless new_point == nil
-            new_point.id = points.length
             points << new_point
             triangulate_point(new_point)
           end
@@ -298,8 +289,6 @@ class Framework
     points << pt1
     points << pt2
     points << pt3
-
-    reidentify_points!
 
     lines << Line.new(pt1, pt2)
     lines << Line.new(pt2, pt3)
