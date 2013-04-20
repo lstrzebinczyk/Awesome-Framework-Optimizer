@@ -30,7 +30,7 @@ class Statistics
     end
 
     def font
-      @font ||= Gosu::Font.new(configuration.window, "Times New Roman", 24)
+      @font ||= Gosu::Font.new(config.window, "Times New Roman", 24)
     end
   end
 end

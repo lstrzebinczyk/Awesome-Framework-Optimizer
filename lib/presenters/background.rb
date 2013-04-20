@@ -1,10 +1,10 @@
 class Background
   class Presenter < Presenter
     def draw
-      configuration.window.draw_quad( 0, 0, 0xffffffff, 
-                                      configuration.window_x, 0, 0xffffffff, 
-                                      configuration.window_x, configuration.window_y, 0xffffffff, 
-                                      0, configuration.window_y, 0xffffffff)
+      config.window.draw_quad( 0,               0,               0xffffffff, 
+                               config.window_x, 0,               0xffffffff, 
+                               config.window_x, config.window_y, 0xffffffff, 
+                               0,               config.window_y, 0xffffffff)
     end
   end
 end

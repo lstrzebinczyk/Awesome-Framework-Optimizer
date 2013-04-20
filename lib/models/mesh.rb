@@ -1,4 +1,6 @@
 class Mesh
+  include Configurable
+  
   attr_accessor :points, :lines, :polygons, :max_energy
 
   def initialize
@@ -123,10 +125,6 @@ class Mesh
 
   def include?(point)
     @polygons.any?{|poly| poly.include?(point) } and not in_forbidden_area?(point)
-  end
-
-  def config
-    Configuration.global
   end
 
   def in_forbidden_area?(point)

@@ -1,5 +1,7 @@
 class FemEquation
   class StiffMatrix
+    include Configurable
+
     attr_reader :values, :size
 
     def initialize(mesh)
@@ -39,10 +41,6 @@ class FemEquation
     end
 
     private
-
-    def config
-      Configuration.global
-    end
 
     def [](key1, key2)
       @values[key1].each do |elem|

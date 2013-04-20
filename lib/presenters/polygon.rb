@@ -19,12 +19,12 @@ class Polygon
     private
 
     def more_complicated_color
-      num = scale(@polygon.energy(configuration.stiff))
+      num = scale(@polygon.energy(config.stiff))
       Gosu::Color.argb(255, 255 * num, 255 * (1 - num), 0)
     end
 
     def less_complicated_color
-      num = scale(@polygon.deletion_goal(configuration.stiff))
+      num = scale(@polygon.deletion_goal(config.stiff))
       Gosu::Color.argb(255, 255 * num, 255 * (1 - num), 0)
     end
 
