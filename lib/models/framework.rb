@@ -185,11 +185,7 @@ class Framework
   end
 
   def field
-    sum = 0
-    polygons.each do |poly|
-      sum += poly.field
-    end
-    sum
+    polygons.map(&:field).inject(:+)
   end
 
   #Bowyer-Watson Algorithm
