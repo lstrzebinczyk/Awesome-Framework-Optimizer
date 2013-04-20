@@ -116,13 +116,55 @@ class Framework
   def perform_triangulation
     if @new_points.empty?
       #performs basic delaunay triangulation using Bowyer-Watson Algorithm
-      basic_triangulation
+      in_big_triangle do
+        points.each do |point|
+          triangulate_point(point) unless point.temporary?
+        end
+      end
+
+      #TODO Change way of using holes so it may use any holes anywhere
+      lines.delete_if{|line| line.midpoint.x > 8 and line.midpoint.x < 22 and line.midpoint.y > 10 and line.midpoint.y < 14}
+      polygons.delete_if{|polygon| polygon.midpoint.x > 8 and polygon.midpoint.x < 22 and polygon.midpoint.y > 10 and polygon.midpoint.y < 14}
     else
-      triangulate_new_points
+      @new_points.each do |point|
+        triangulate_point(point)
+      end
+
+      @new_points =  []
+
+      lines.delete_if{|line| line.midpoint.x > 8 and line.midpoint.x < 22 and line.midpoint.y > 10 and line.midpoint.y < 14}
+      polygons.delete_if{|polygon| polygon.midpoint.x > 8 and polygon.midpoint.x < 22 and polygon.midpoint.y > 10 and polygon.midpoint.y < 14}
     end
 
     #performs mesh refinement using ruppert algorith
-    ruppert_refinement
+    loop do
+      max_angle_cos = constants.max_angle_cos
+      polygon_array = []
+
+      polygons.each do |poly|
+        polygon_array << poly if poly.good_for_refining?(max_angle_cos, constants.min_field, constants.max_field)
+      end
+
+      polygon_to_divide = polygon_array.max_by{|poly| poly.cosine}
+
+      unless polygon_to_divide.nil?
+        potential_new_point = polygon_to_divide.circle.middle
+          # self.draw
+          if self.includes_point?(potential_new_point)
+            new_point = potential_new_point
+          elsif self.includes_point?(polygon_to_divide.mid_of_longest_side)
+            new_point = polygon_to_divide.mid_of_longest_side
+          end
+
+          unless new_point == nil
+            new_point.id = points.length
+            points << new_point
+            triangulate_point(new_point)
+          end
+      else
+        break
+      end
+    end
   end
 
   def update_points_with_deltas(deltas)
@@ -184,63 +226,6 @@ class Framework
 
   def field
     polygons.map(&:field).inject(:+)
-  end
-
-  #Bowyer-Watson Algorithm
-  def basic_triangulation
-    in_big_triangle do
-      points.each do |point|
-        triangulate_point(point) unless point.temporary?
-      end
-    end
-
-    #TODO Change way of using holes so it may use any holes anywhere
-    lines.delete_if{|line| line.midpoint.x > 8 and line.midpoint.x < 22 and line.midpoint.y > 10 and line.midpoint.y < 14}
-    polygons.delete_if{|polygon| polygon.midpoint.x > 8 and polygon.midpoint.x < 22 and polygon.midpoint.y > 10 and polygon.midpoint.y < 14}
-  end
-
-  def triangulate_new_points
-    @new_points.each do |point|
-      triangulate_point(point)
-    end
-
-    @new_points =  []
-
-    lines.delete_if{|line| line.midpoint.x > 8 and line.midpoint.x < 22 and line.midpoint.y > 10 and line.midpoint.y < 14}
-    polygons.delete_if{|polygon| polygon.midpoint.x > 8 and polygon.midpoint.x < 22 and polygon.midpoint.y > 10 and polygon.midpoint.y < 14}
-  end
-
-  def ruppert_refinement
-    while true
-      max_angle_cos = constants.max_angle_cos
-      polygon_array = []
-
-      polygons.each do |poly|
-        polygon_array << poly if poly.good_for_refining?(max_angle_cos, constants.min_field, constants.max_field)
-      end
-
-      polygon_to_divide = polygon_array.max_by{|poly| poly.cosine}
-
-      unless polygon_to_divide.nil?
-        potential_new_point = polygon_to_divide.circle.middle
-          # self.draw
-          if self.includes_point?(potential_new_point)
-            new_point = potential_new_point
-          elsif self.includes_point?(polygon_to_divide.mid_of_longest_side)
-            new_point = polygon_to_divide.mid_of_longest_side
-          end
-
-          unless new_point == nil
-            new_point.id = points.length
-            points << new_point
-            triangulate_point(new_point)
-          end
-      else
-        break
-      end
-
-        # self.draw if debug
-    end
   end
 
   #TODO
