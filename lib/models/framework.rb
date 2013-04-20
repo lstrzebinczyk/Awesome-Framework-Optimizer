@@ -1,5 +1,5 @@
 class Framework
-  attr_accessor :points, :lines, :polygons, :stiff, :constants, :max_energy
+  attr_accessor :points, :lines, :polygons, :stiff, :max_energy
 
   def stiff_matrix
     FemEquation::StiffMatrix.new(self).tap do |matrix|
@@ -8,7 +8,7 @@ class Framework
   end
 
   def config
-    @configuration = Configuration.global
+    Configuration.global
   end
 
   def draw_empty
@@ -33,7 +33,7 @@ class Framework
     @new_points += dividing_polygon.dividing_points
     @points += @new_points
 
-    return dividing_polygon.energy(self.stiff) > self.constants.energy_limit
+    return dividing_polygon.energy(self.stiff) > config.energy_limit
   end
 
   def optimize
@@ -89,14 +89,11 @@ class Framework
     @lines = []
     @polygons = []
     @stiff = config.stiff
-    @constants = config
     @new_points = []
 
-    @force = Boundary.new(Point.new(10, 30), Point.new(15, 30), @constants.force)
+    @force = Boundary.new(Point.new(10, 30), Point.new(15, 30), config.force)
     @x_blocks = [Boundary.new(Point.new(10, 0), Point.new(20, 0)), Boundary.new(Point.new(15, 0), Point.new(15, 30))]
     @y_blocks = [Boundary.new(Point.new(10, 0), Point.new(20, 0))]
-    
-    self
   end
 
   def points_to_block_ids
@@ -148,11 +145,11 @@ class Framework
 
     #performs mesh refinement using ruppert algorith
     loop do
-      max_angle_cos = constants.max_angle_cos
+      max_angle_cos = config.max_angle_cos
       polygon_array = []
 
       polygons.each do |poly|
-        polygon_array << poly if poly.good_for_refining?(max_angle_cos, constants.min_field, constants.max_field)
+        polygon_array << poly if poly.good_for_refining?(max_angle_cos, config.min_field, config.max_field)
       end
 
       polygon_to_divide = polygon_array.max_by{|poly| poly.cosine}
