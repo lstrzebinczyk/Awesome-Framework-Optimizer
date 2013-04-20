@@ -105,7 +105,6 @@ class Framework
   #resets data in points
   def reload
     points.each_index do |i|
-      points[i].reset
       points[i].id = i
     end
   end

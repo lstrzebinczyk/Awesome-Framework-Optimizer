@@ -37,11 +37,6 @@ class Point
     @y + @dy
   end
 
-  def reset
-    @dx = 0
-    @dy = 0
-  end
-
   def change_delta(new_dx, new_dy)
     @dx = new_dx
     @dy = new_dy

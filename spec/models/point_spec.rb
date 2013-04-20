@@ -54,15 +54,6 @@ describe Point do
     end
   end
 
-  describe 'reset' do
-    it 'sets @dx, @dy, @fx, @fy to 0' do
-      point = nonempty_point
-      point.reset
-      point.dx.should == 0
-      point.dy.should == 0
-    end
-  end
-
   describe 'change_delta' do
     it 'sets @dx and @dy to provided data' do
       point = Point.new(0, 0)
