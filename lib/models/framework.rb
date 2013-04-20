@@ -92,8 +92,8 @@ class Framework
     @new_points = []
 
     @force = Boundary.new(Point.new(10, 30), Point.new(15, 30), config.force)
-    @x_blocks = [Boundary.new(Point.new(10, 0), Point.new(20, 0)), Boundary.new(Point.new(15, 0), Point.new(15, 30))]
-    @y_blocks = [Boundary.new(Point.new(10, 0), Point.new(20, 0))]
+    @x_blocks = [Boundary.new(Point.new(10, 0), Point.new(15, 0)), Boundary.new(Point.new(15, 0), Point.new(15, 30))]
+    @y_blocks = [Boundary.new(Point.new(10, 0), Point.new(15, 0))]
   end
 
   def points_to_block_ids
